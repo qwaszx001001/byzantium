@@ -1,0 +1,29 @@
+{
+  "name": "byzantium-edu",
+  "version": "1.0.0",
+  "description": "Website course dengan fitur admin, postingan, dan pedia",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "ejs": "^3.1.9",
+    "mysql2": "^3.6.5",
+    "bcryptjs": "^2.4.3",
+    "express-session": "^1.17.3",
+    "connect-flash": "^0.1.1",
+    "multer": "^1.4.5-lts.1",
+    "express-validator": "^7.0.1",
+    "dotenv": "^16.3.1",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "keywords": ["education", "course", "learning", "express", "mysql"],
+  "author": "ByzantiumEdu",
+  "license": "MIT"
+} 

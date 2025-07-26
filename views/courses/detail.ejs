@@ -1,0 +1,150 @@
+<%- include('../layouts/main', { title: title }) %>
+
+<div class="container py-5">
+    <div class="row">
+        <!-- Course Content -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <% if (course.thumbnail) { %>
+                    <img src="<%= course.thumbnail %>" class="card-img-top" alt="<%= course.title %>" style="height: 300px; object-fit: cover;">
+                <% } else { %>
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 300px;">
+                        <i class="fas fa-book fa-4x text-muted"></i>
+                    </div>
+                <% } %>
+                <div class="card-body">
+                    <h1 class="card-title fw-bold mb-3"><%= course.title %></h1>
+                    <p class="card-text text-muted mb-4"><%= course.description %></p>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-user text-primary me-2"></i>
+                                <span class="text-muted">Instruktur: <strong><%= course.instructor_name %></strong></span>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-tag text-primary me-2"></i>
+                                <span class="text-muted">Kategori: <strong><%= course.category_name || 'Umum' %></strong></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-calendar text-primary me-2"></i>
+                                <span class="text-muted">Dibuat: <strong><%= new Date(course.created_at).toLocaleDateString('id-ID') %></strong></span>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-clock text-primary me-2"></i>
+                                <span class="text-muted">Terakhir diperbarui: <strong><%= new Date(course.updated_at).toLocaleDateString('id-ID') %></strong></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="fw-bold mb-3">Deskripsi Kursus</h5>
+                        <div class="content-area">
+                            <%- course.content %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Informasi Kursus</h5>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-muted">Status:</span>
+                        <% if (course.is_published) { %>
+                            <span class="badge bg-success">Diterbitkan</span>
+                        <% } else { %>
+                            <span class="badge bg-warning">Draft</span>
+                        <% } %>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-muted">Tipe:</span>
+                        <% if (course.is_free) { %>
+                            <span class="badge bg-success">Gratis</span>
+                        <% } else { %>
+                            <span class="badge bg-warning">Berbayar</span>
+                        <% } %>
+                    </div>
+
+                    <% if (isAuthenticated) { %>
+                        <form action="/courses/<%= course.id %>/enroll" method="POST" class="mt-4">
+                            <button type="submit" class="btn btn-primary w-100 enroll-btn">
+                                <i class="fas fa-play me-2"></i>Daftar Kursus
+                            </button>
+                        </form>
+                    <% } else { %>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Silakan <a href="/auth/login" class="alert-link">login</a> untuk mendaftar ke kursus ini.
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Related Courses -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Kursus Terkait</h5>
+                    <p class="text-muted small">Kursus lain yang mungkin menarik untuk Anda</p>
+                    <!-- Related courses will be loaded here -->
+                    <div class="text-center py-3">
+                        <i class="fas fa-spinner fa-spin text-muted"></i>
+                        <p class="text-muted small mt-2">Memuat kursus terkait...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.content-area {
+    line-height: 1.8;
+    color: #333;
+}
+
+.content-area h1, .content-area h2, .content-area h3, .content-area h4, .content-area h5, .content-area h6 {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.content-area p {
+    margin-bottom: 1rem;
+}
+
+.content-area ul, .content-area ol {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+}
+
+.content-area blockquote {
+    border-left: 4px solid #667eea;
+    padding-left: 1rem;
+    margin: 1rem 0;
+    font-style: italic;
+    color: #666;
+}
+
+.content-area code {
+    background-color: #f8f9fa;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+}
+
+.content-area pre {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+</style> 

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title || 'Kontak - ByzantiumEdu' %></title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="fas fa-graduation-cap me-2"></i>ByzantiumEdu
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Beranda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/courses">Kursus</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/posts">Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/pedia">Pedia</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">Tentang</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/contact">Kontak</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <% if (isAuthenticated) { %>
+                        <% if (isAdmin) { %>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/admin">
+                                    <i class="fas fa-cog me-1"></i>Admin
+                                </a>
+                            </li>
+                        <% } %>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user me-1"></i><%= user.full_name %>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/profile">Profil</a></li>
+                                <li><a class="dropdown-item" href="/my-courses">Kursus Saya</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/auth/logout">Logout</a></li>
+                            </ul>
+                        </li>
+                    <% } else { %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/auth/login">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/auth/register">Daftar</a>
+                        </li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <% if (success_msg && success_msg.length > 0) { %>
+        <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
+            <i class="fas fa-check-circle me-2"></i><%= success_msg %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <% } %>
+    
+    <% if (error_msg && error_msg.length > 0) { %>
+        <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i><%= error_msg %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <% } %>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container py-5">
+    <!-- Header -->
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto text-center">
+            <h1 class="display-4 fw-bold mb-4">Hubungi Kami</h1>
+            <p class="lead text-muted">Kami siap membantu Anda dengan pertanyaan, saran, atau masalah teknis yang Anda hadapi.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Contact Form -->
+        <div class="col-lg-8 mb-5">
+            <div class="card shadow-sm">
+                <div class="card-body p-5">
+                    <h3 class="fw-bold mb-4">Kirim Pesan</h3>
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="firstName" class="form-label">Nama Depan</label>
+                                <input type="text" class="form-control" id="firstName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="lastName" class="form-label">Nama Belakang</label>
+                                <input type="text" class="form-control" id="lastName" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Subjek</label>
+                            <select class="form-select" id="subject" required>
+                                <option value="">Pilih subjek</option>
+                                <option value="general">Pertanyaan Umum</option>
+                                <option value="technical">Masalah Teknis</option>
+                                <option value="course">Pertanyaan Kursus</option>
+                                <option value="suggestion">Saran</option>
+                                <option value="other">Lainnya</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label for="message" class="form-label">Pesan</label>
+                            <textarea class="form-control" id="message" rows="5" placeholder="Tulis pesan Anda di sini..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane me-2"></i>Kirim Pesan
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4">Informasi Kontak</h5>
+                    
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h6 class="mb-1">Email</h6>
+                            <p class="text-muted mb-0">info@byzantium.edu</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div>
+                            <h6 class="mb-1">Telepon</h6>
+                            <p class="text-muted mb-0">+62 21 1234 5678</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h6 class="mb-1">Alamat</h6>
+                            <p class="text-muted mb-0">Jl. Pendidikan No. 123<br>Jakarta, Indonesia</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center">
+                        <div class="bg-warning text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div>
+                            <h6 class="mb-1">Jam Kerja</h6>
+                            <p class="text-muted mb-0">Senin - Jumat: 09:00 - 17:00<br>Sabtu: 09:00 - 15:00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Media -->
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4">Ikuti Kami</h5>
+                    <div class="d-grid gap-2">
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="fab fa-facebook me-2"></i>Facebook
+                        </a>
+                        <a href="#" class="btn btn-outline-info">
+                            <i class="fab fa-twitter me-2"></i>Twitter
+                        </a>
+                        <a href="#" class="btn btn-outline-danger">
+                            <i class="fab fa-instagram me-2"></i>Instagram
+                        </a>
+                        <a href="#" class="btn btn-outline-danger">
+                            <i class="fab fa-youtube me-2"></i>YouTube
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body p-5">
+                    <h3 class="fw-bold text-center mb-5">Pertanyaan yang Sering Diajukan</h3>
+                    
+                    <div class="accordion" id="faqAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="faq1">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1">
+                                    Apakah kursus di ByzantiumEdu benar-benar gratis?
+                                </button>
+                            </h2>
+                            <div id="collapse1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Ya, semua kursus di ByzantiumEdu sepenuhnya gratis. Kami berkomitmen untuk membuat pendidikan berkualitas dapat diakses oleh semua orang tanpa biaya.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="faq2">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2">
+                                    Bagaimana cara mendaftar ke kursus?
+                                </button>
+                            </h2>
+                            <div id="collapse2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Untuk mendaftar ke kursus, Anda perlu membuat akun terlebih dahulu. Setelah login, Anda dapat mendaftar ke kursus yang Anda inginkan dengan mengklik tombol "Daftar Kursus".
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="faq3">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3">
+                                    Apakah saya akan mendapat sertifikat setelah menyelesaikan kursus?
+                                </button>
+                            </h2>
+                            <div id="collapse3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Ya, Anda akan mendapat sertifikat digital setelah menyelesaikan kursus. Sertifikat dapat diunduh dan dicetak untuk keperluan portofolio atau CV.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="faq4">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4">
+                                    Bagaimana jika saya mengalami masalah teknis?
+                                </button>
+                            </h2>
+                            <div id="collapse4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Jika Anda mengalami masalah teknis, silakan hubungi tim dukungan kami melalui email atau form kontak di halaman ini. Kami akan merespons dalam waktu 24 jam.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5><i class="fas fa-graduation-cap me-2"></i>ByzantiumEdu</h5>
+                    <p class="text-muted">Platform pembelajaran online terbaik untuk semua kalangan. Belajar dengan mudah, cepat, dan efektif.</p>
+                </div>
+                <div class="col-md-2">
+                    <h6>Menu</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="/" class="text-muted text-decoration-none">Beranda</a></li>
+                        <li><a href="/courses" class="text-muted text-decoration-none">Kursus</a></li>
+                        <li><a href="/posts" class="text-muted text-decoration-none">Blog</a></li>
+                        <li><a href="/pedia" class="text-muted text-decoration-none">Pedia</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <h6>Informasi</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="/about" class="text-muted text-decoration-none">Tentang Kami</a></li>
+                        <li><a href="/contact" class="text-muted text-decoration-none">Kontak</a></li>
+                        <li><a href="/privacy" class="text-muted text-decoration-none">Privasi</a></li>
+                        <li><a href="/terms" class="text-muted text-decoration-none">Ketentuan</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6>Ikuti Kami</h6>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-muted"><i class="fab fa-facebook fa-lg"></i></a>
+                        <a href="#" class="text-muted"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="text-muted"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="#" class="text-muted"><i class="fab fa-youtube fa-lg"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="text-muted mb-0">&copy; 2024 ByzantiumEdu. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="text-muted mb-0">Made with <i class="fas fa-heart text-danger"></i> for education</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="/js/script.js"></script>
+</body>
+</html>

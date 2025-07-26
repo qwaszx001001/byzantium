@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title || 'Pedia - ByzantiumEdu' %></title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="fas fa-graduation-cap me-2"></i>ByzantiumEdu
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Beranda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/courses">Kursus</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/posts">Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/pedia">Pedia</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">Tentang</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact">Kontak</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <% if (isAuthenticated) { %>
+                        <% if (isAdmin) { %>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/admin">
+                                    <i class="fas fa-cog me-1"></i>Admin
+                                </a>
+                            </li>
+                        <% } %>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user me-1"></i><%= user.full_name %>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/profile">Profil</a></li>
+                                <li><a class="dropdown-item" href="/my-courses">Kursus Saya</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/auth/logout">Logout</a></li>
+                            </ul>
+                        </li>
+                    <% } else { %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/auth/login">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/auth/register">Daftar</a>
+                        </li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <% if (success_msg && success_msg.length > 0) { %>
+        <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
+            <i class="fas fa-check-circle me-2"></i><%= success_msg %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <% } %>
+    
+    <% if (error_msg && error_msg.length > 0) { %>
+        <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i><%= error_msg %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <% } %>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container py-5">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col-lg-8">
+                    <h1 class="fw-bold">Ensiklopedia Digital</h1>
+                    <p class="text-muted">Jelajahi pengetahuan dalam format ensiklopedia yang mudah dipahami</p>
+                </div>
+                <div class="col-lg-4">
+                    <form class="d-flex" method="GET" action="/pedia/search">
+                        <input class="form-control me-2" type="search" name="q" placeholder="Cari artikel pedia..." value="<%= query || '' %>">
+                        <button class="btn btn-outline-primary" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Pedia Articles Grid -->
+            <div class="row">
+                <% if (articles && articles.length > 0) { %>
+                    <% articles.forEach(article => { %>
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card h-100 shadow-sm">
+                                <% if (article.featured_image) { %>
+                                    <img src="<%= article.featured_image %>" class="card-img-top" alt="<%= article.title %>" style="height: 200px; object-fit: cover;">
+                                <% } else { %>
+                                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                        <i class="fas fa-encyclopedia fa-3x text-muted"></i>
+                                    </div>
+                                <% } %>
+                                <div class="card-body">
+                                    <h5 class="card-title fw-bold"><%= article.title %></h5>
+                                    <p class="card-text text-muted"><%= article.excerpt || article.content.substring(0, 150) + '...' %></p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="badge bg-primary"><%= article.category_name || 'Umum' %></span>
+                                        <small class="text-muted">
+                                            <i class="fas fa-user me-1"></i><%= article.author_name %>
+                                        </small>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <small class="text-muted">
+                                            <i class="fas fa-eye me-1"></i><%= article.view_count %> views
+                                        </small>
+                                        <small class="text-muted">
+                                            <i class="fas fa-calendar me-1"></i><%= new Date(article.created_at).toLocaleDateString('id-ID') %>
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-transparent">
+                                    <a href="/pedia/<%= article.slug %>" class="btn btn-primary w-100">
+                                        <i class="fas fa-book-open me-2"></i>Baca Artikel
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <div class="col-12 text-center">
+                        <div class="py-5">
+                            <i class="fas fa-encyclopedia fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">Belum ada artikel pedia tersedia</h5>
+                            <p class="text-muted">Artikel pedia akan segera ditambahkan</p>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+
+            <!-- Pagination -->
+            <% if (totalPages > 1) { %>
+                <nav aria-label="Pedia articles pagination" class="mt-5">
+                    <ul class="pagination justify-content-center">
+                        <% if (currentPage > 1) { %>
+                            <li class="page-item">
+                                <a class="page-link" href="/pedia?page=<%= currentPage - 1 %>">
+                                    <i class="fas fa-chevron-left"></i>
+                                </a>
+                            </li>
+                        <% } %>
+                        
+                        <% for (let i = 1; i <= totalPages; i++) { %>
+                            <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                <a class="page-link" href="/pedia?page=<%= i %>"><%= i %></a>
+                            </li>
+                        <% } %>
+                        
+                        <% if (currentPage < totalPages) { %>
+                            <li class="page-item">
+                                <a class="page-link" href="/pedia?page=<%= currentPage + 1 %>">
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </li>
+                        <% } %>
+                    </ul>
+                </nav>
+            <% } %>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5><i class="fas fa-graduation-cap me-2"></i>ByzantiumEdu</h5>
+                    <p class="text-muted">Platform pembelajaran online terbaik untuk semua kalangan. Belajar dengan mudah, cepat, dan efektif.</p>
+                </div>
+                <div class="col-md-2">
+                    <h6>Menu</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="/" class="text-muted text-decoration-none">Beranda</a></li>
+                        <li><a href="/courses" class="text-muted text-decoration-none">Kursus</a></li>
+                        <li><a href="/posts" class="text-muted text-decoration-none">Blog</a></li>
+                        <li><a href="/pedia" class="text-muted text-decoration-none">Pedia</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <h6>Informasi</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="/about" class="text-muted text-decoration-none">Tentang Kami</a></li>
+                        <li><a href="/contact" class="text-muted text-decoration-none">Kontak</a></li>
+                        <li><a href="/privacy" class="text-muted text-decoration-none">Privasi</a></li>
+                        <li><a href="/terms" class="text-muted text-decoration-none">Ketentuan</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6>Ikuti Kami</h6>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-muted"><i class="fab fa-facebook fa-lg"></i></a>
+                        <a href="#" class="text-muted"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="text-muted"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="#" class="text-muted"><i class="fab fa-youtube fa-lg"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="text-muted mb-0">&copy; 2024 ByzantiumEdu. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="text-muted mb-0">Made with <i class="fas fa-heart text-danger"></i> for education</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="/js/script.js"></script>
+</body>
+</html> 

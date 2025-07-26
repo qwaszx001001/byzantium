@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Kursus - Admin ByzantiumEdu</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="fas fa-graduation-cap me-2"></i>ByzantiumEdu
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Beranda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/courses">Kursus</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/posts">Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/pedia">Pedia</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <% if (isAuthenticated) { %>
+                        <% if (isAdmin) { %>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="/admin">
+                                    <i class="fas fa-cog me-1"></i>Admin
+                                </a>
+                            </li>
+                        <% } %>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user me-1"></i><%= user.full_name %>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/profile">Profil</a></li>
+                                <li><a class="dropdown-item" href="/my-courses">Kursus Saya</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/auth/logout">Logout</a></li>
+                            </ul>
+                        </li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <% if (success_msg && success_msg.length > 0) { %>
+        <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
+            <i class="fas fa-check-circle me-2"></i><%= success_msg %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <% } %>
+    
+    <% if (error_msg && error_msg.length > 0) { %>
+        <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i><%= error_msg %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <% } %>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h1 class="fw-bold">Tambah Kursus Baru</h1>
+                            <p class="text-muted">Buat kursus baru untuk platform ByzantiumEdu</p>
+                        </div>
+                        <a href="/admin/courses" class="btn btn-outline-primary">
+                            <i class="fas fa-arrow-left me-2"></i>Kembali ke Daftar Kursus
+                        </a>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="/admin/courses/create" method="POST" enctype="multipart/form-data">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="mb-3">
+                                            <label for="title" class="form-label">Judul Kursus</label>
+                                            <input type="text" class="form-control" id="title" name="title" required>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="slug" class="form-label">Slug</label>
+                                            <input type="text" class="form-control" id="slug" name="slug" required>
+                                            <small class="text-muted">Contoh: belajar-javascript-dasar</small>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="description" class="form-label">Deskripsi</label>
+                                            <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="category_id" class="form-label">Kategori</label>
+                                                    <select class="form-select" id="category_id" name="category_id" required>
+                                                        <option value="">Pilih Kategori</option>
+                                                        <option value="1">Teknologi</option>
+                                                        <option value="2">Pendidikan</option>
+                                                        <option value="3">Bisnis</option>
+                                                        <option value="4">Kesehatan</option>
+                                                        <option value="5">Seni & Budaya</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="instructor_id" class="form-label">Instruktur</label>
+                                                    <select class="form-select" id="instructor_id" name="instructor_id" required>
+                                                        <option value="">Pilih Instruktur</option>
+                                                        <option value="1">Administrator</option>
+                                                        <option value="2">John Doe</option>
+                                                        <option value="3">Jane Smith</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="content" class="form-label">Konten Kursus</label>
+                                            <textarea class="form-control" id="content" name="content" rows="8" required></textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="thumbnail" class="form-label">Thumbnail</label>
+                                            <input type="file" class="form-control" id="thumbnail" name="thumbnail" accept="image/*">
+                                            <small class="text-muted">Format: JPG, PNG, GIF. Maksimal 2MB.</small>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="status" class="form-label">Status</label>
+                                            <select class="form-select" id="status" name="status">
+                                                <option value="draft">Draft</option>
+                                                <option value="published">Diterbitkan</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="price" class="form-label">Harga</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">Rp</span>
+                                                <input type="number" class="form-control" id="price" name="price" value="0" min="0">
+                                            </div>
+                                            <small class="text-muted">0 = Gratis</small>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="duration" class="form-label">Durasi (menit)</label>
+                                            <input type="number" class="form-control" id="duration" name="duration" value="0" min="0">
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="level" class="form-label">Level</label>
+                                            <select class="form-select" id="level" name="level">
+                                                <option value="beginner">Pemula</option>
+                                                <option value="intermediate">Menengah</option>
+                                                <option value="advanced">Lanjutan</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-2"></i>Simpan Kursus
+                                    </button>
+                                    <button type="submit" name="action" value="draft" class="btn btn-outline-secondary">
+                                        <i class="fas fa-file me-2"></i>Simpan sebagai Draft
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5><i class="fas fa-graduation-cap me-2"></i>ByzantiumEdu</h5>
+                    <p class="text-muted">Platform pembelajaran online terbaik untuk semua kalangan.</p>
+                </div>
+                <div class="col-md-8 text-md-end">
+                    <p class="text-muted mb-0">&copy; 2024 ByzantiumEdu. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title || 'Admin Dashboard - ByzantiumEdu' %></title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="fas fa-graduation-cap me-2"></i>ByzantiumEdu
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Beranda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/courses">Kursus</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/posts">Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/pedia">Pedia</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">Tentang</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact">Kontak</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <% if (isAuthenticated) { %>
+                        <% if (isAdmin) { %>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="/admin">
+                                    <i class="fas fa-cog me-1"></i>Admin
+                                </a>
+                            </li>
+                        <% } %>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user me-1"></i><%= user.full_name %>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/profile">Profil</a></li>
+                                <li><a class="dropdown-item" href="/my-courses">Kursus Saya</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/auth/logout">Logout</a></li>
+                            </ul>
+                        </li>
+                    <% } else { %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/auth/login">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/auth/register">Daftar</a>
+                        </li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <% if (success_msg && success_msg.length > 0) { %>
+        <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
+            <i class="fas fa-check-circle me-2"></i><%= success_msg %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <% } %>
+    
+    <% if (error_msg && error_msg.length > 0) { %>
+        <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i><%= error_msg %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <% } %>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container py-5">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="fw-bold">Dashboard Admin</h1>
+            <p class="text-muted">Selamat datang di panel administrasi ByzantiumEdu</p>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-5">
+        <div class="col-md-3 mb-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-2x mb-3"></i>
+                    <h3 class="fw-bold"><%= stats.totalUsers %></h3>
+                    <p class="mb-0">Total Pengguna</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-book fa-2x mb-3"></i>
+                    <h3 class="fw-bold"><%= stats.totalCourses %></h3>
+                    <p class="mb-0">Total Kursus</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-info text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-newspaper fa-2x mb-3"></i>
+                    <h3 class="fw-bold"><%= stats.totalPosts %></h3>
+                    <p class="mb-0">Total Postingan</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-encyclopedia fa-2x mb-3"></i>
+                    <h3 class="fw-bold"><%= stats.totalPedia %></h3>
+                    <p class="mb-0">Total Artikel Pedia</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="fw-bold mb-0">Aksi Cepat</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <a href="/admin/courses/create" class="btn btn-primary w-100">
+                                <i class="fas fa-plus me-2"></i>Tambah Kursus
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="/admin/posts/create" class="btn btn-info w-100">
+                                <i class="fas fa-plus me-2"></i>Tambah Postingan
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="/admin/pedia/create" class="btn btn-warning w-100">
+                                <i class="fas fa-plus me-2"></i>Tambah Artikel Pedia
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="/admin/users" class="btn btn-secondary w-100">
+                                <i class="fas fa-users me-2"></i>Kelola Pengguna
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Content -->
+    <div class="row">
+        <!-- Recent Courses -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0">Kursus Terbaru</h5>
+                    <a href="/admin/courses" class="btn btn-sm btn-outline-primary">Lihat Semua</a>
+                </div>
+                <div class="card-body">
+                    <% if (recentCourses && recentCourses.length > 0) { %>
+                        <% recentCourses.forEach(course => { %>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="flex-shrink-0">
+                                    <% if (course.thumbnail) { %>
+                                        <img src="<%= course.thumbnail %>" alt="<%= course.title %>" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
+                                    <% } else { %>
+                                        <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                            <i class="fas fa-book text-muted"></i>
+                                        </div>
+                                    <% } %>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-1"><%= course.title %></h6>
+                                    <small class="text-muted">
+                                        <i class="fas fa-user me-1"></i><%= course.instructor_name %>
+                                        <span class="ms-2">
+                                            <i class="fas fa-calendar me-1"></i><%= new Date(course.created_at).toLocaleDateString('id-ID') %>
+                                        </span>
+                                    </small>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    <% if (course.is_published) { %>
+                                        <span class="badge bg-success">Diterbitkan</span>
+                                    <% } else { %>
+                                        <span class="badge bg-warning">Draft</span>
+                                    <% } %>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <p class="text-muted text-center py-3">Belum ada kursus</p>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Posts -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0">Postingan Terbaru</h5>
+                    <a href="/admin/posts" class="btn btn-sm btn-outline-info">Lihat Semua</a>
+                </div>
+                <div class="card-body">
+                    <% if (recentPosts && recentPosts.length > 0) { %>
+                        <% recentPosts.forEach(post => { %>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="flex-shrink-0">
+                                    <% if (post.featured_image) { %>
+                                        <img src="<%= post.featured_image %>" alt="<%= post.title %>" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
+                                    <% } else { %>
+                                        <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                            <i class="fas fa-newspaper text-muted"></i>
+                                        </div>
+                                    <% } %>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-1"><%= post.title %></h6>
+                                    <small class="text-muted">
+                                        <i class="fas fa-user me-1"></i><%= post.author_name %>
+                                        <span class="ms-2">
+                                            <i class="fas fa-calendar me-1"></i><%= new Date(post.created_at).toLocaleDateString('id-ID') %>
+                                        </span>
+                                    </small>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    <% if (post.status === 'published') { %>
+                                        <span class="badge bg-success">Diterbitkan</span>
+                                    <% } else { %>
+                                        <span class="badge bg-warning">Draft</span>
+                                    <% } %>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <p class="text-muted text-center py-3">Belum ada postingan</p>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Users -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0">Pengguna Terbaru</h5>
+                    <a href="/admin/users" class="btn btn-sm btn-outline-secondary">Lihat Semua</a>
+                </div>
+                <div class="card-body">
+                    <% if (recentUsers && recentUsers.length > 0) { %>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Nama</th>
+                                        <th>Username</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Tanggal Daftar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% recentUsers.forEach(user => { %>
+                                        <tr>
+                                            <td><%= user.full_name %></td>
+                                            <td><%= user.username %></td>
+                                            <td><%= user.email %></td>
+                                            <td>
+                                                <% if (user.role === 'admin') { %>
+                                                    <span class="badge bg-danger">Admin</span>
+                                                <% } else { %>
+                                                    <span class="badge bg-primary">User</span>
+                                                <% } %>
+                                            </td>
+                                            <td><%= new Date(user.created_at).toLocaleDateString('id-ID') %></td>
+                                        </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% } else { %>
+                        <p class="text-muted text-center py-3">Belum ada pengguna</p>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-dark text-light py-5 mt-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h5><i class="fas fa-graduation-cap me-2"></i>ByzantiumEdu</h5>
+                        <p class="text-muted">Platform pembelajaran online terbaik untuk semua kalangan. Belajar dengan mudah, cepat, dan efektif.</p>
+                    </div>
+                    <div class="col-md-2">
+                        <h6>Menu</h6>
+                        <ul class="list-unstyled">
+                            <li><a href="/" class="text-muted text-decoration-none">Beranda</a></li>
+                            <li><a href="/courses" class="text-muted text-decoration-none">Kursus</a></li>
+                            <li><a href="/posts" class="text-muted text-decoration-none">Blog</a></li>
+                            <li><a href="/pedia" class="text-muted text-decoration-none">Pedia</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-2">
+                        <h6>Informasi</h6>
+                        <ul class="list-unstyled">
+                            <li><a href="/about" class="text-muted text-decoration-none">Tentang Kami</a></li>
+                            <li><a href="/contact" class="text-muted text-decoration-none">Kontak</a></li>
+                            <li><a href="/privacy" class="text-muted text-decoration-none">Privasi</a></li>
+                            <li><a href="/terms" class="text-muted text-decoration-none">Ketentuan</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Ikuti Kami</h6>
+                        <div class="d-flex gap-3">
+                            <a href="#" class="text-muted"><i class="fab fa-facebook fa-lg"></i></a>
+                            <a href="#" class="text-muted"><i class="fab fa-twitter fa-lg"></i></a>
+                            <a href="#" class="text-muted"><i class="fab fa-instagram fa-lg"></i></a>
+                            <a href="#" class="text-muted"><i class="fab fa-youtube fa-lg"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <hr class="my-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="text-muted mb-0">&copy; 2024 ByzantiumEdu. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <p class="text-muted mb-0">Made with <i class="fas fa-heart text-danger"></i> for education</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+    </html> 

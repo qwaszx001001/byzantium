@@ -1,0 +1,145 @@
+<%- include('../layouts/main', { title: title, user: user }) %>
+
+
+        <div class="container py-5">
+            <div class="row">
+                <!-- Ebook Detail -->
+                <div class="col-lg-8">
+                    <div class="card shadow-sm">
+                        <div class="card-body p-5">
+                            <!-- Ebook Header -->
+                            <div class="d-flex align-items-center mb-4">
+                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-4" 
+                                     style="width: 80px; height: 80px;">
+                                    <i class="fas fa-file-pdf text-white fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h1 class="fw-bold mb-2"><%= ebook.title %></h1>
+                                    <div class="d-flex align-items-center text-muted">
+                                        <i class="fas fa-download me-2"></i>
+                                        <%= ebook.download_count || 0 %> kali diunduh
+                                        <span class="mx-2">•</span>
+                                        <i class="fas fa-calendar me-2"></i>
+                                        <%= new Date(ebook.created_at).toLocaleDateString('id-ID') %>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Author Info -->
+                            <div class="d-flex align-items-center mb-4 p-3 bg-light rounded">
+                                <% if (ebook.author_avatar) { %>
+                                    <img src="<%= ebook.author_avatar %>" 
+                                         alt="<%= ebook.author_name %>" 
+                                         class="rounded-circle me-3" 
+                                         style="width: 50px; height: 50px; object-fit: cover;">
+                                <% } else { %>
+                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-3" 
+                                         style="width: 50px; height: 50px;">
+                                        <i class="fas fa-user text-white"></i>
+                                    </div>
+                                <% } %>
+                                <div>
+                                    <div class="fw-bold"><%= ebook.author_name %></div>
+                                    <% if (ebook.author_bio) { %>
+                                        <small class="text-muted"><%= ebook.author_bio %></small>
+                                    <% } %>
+                                </div>
+                            </div>
+
+                            <!-- Category -->
+                            <% if (ebook.category_name) { %>
+                                <div class="mb-4">
+                                    <span class="badge bg-primary fs-6"><%= ebook.category_name %></span>
+                                </div>
+                            <% } %>
+
+                            <!-- Description -->
+                            <div class="mb-4">
+                                <h4 class="fw-bold mb-3">Deskripsi</h4>
+                                <p class="fs-5 text-muted">
+                                    <%= ebook.description || 'Deskripsi tidak tersedia' %>
+                                </p>
+                            </div>
+
+                            <!-- Download Section -->
+                            <div class="text-center py-4 bg-success bg-opacity-10 rounded">
+                                <h4 class="fw-bold text-success mb-3">
+                                    <i class="fas fa-gift me-2"></i>Download Gratis!
+                                </h4>
+                                <p class="text-muted mb-4">Ebook ini tersedia untuk diunduh secara gratis</p>
+                                <a href="/ebooks/<%= ebook.id %>/download" class="btn btn-success btn-lg">
+                                    <i class="fas fa-download me-2"></i>Download PDF
+                                </a>
+                                <div class="mt-3">
+                                    <small class="text-muted">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        File akan langsung terunduh ke perangkat Anda
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <!-- Related Ebooks -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-book me-2"></i>Ebook Terkait
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <% if (relatedEbooks && relatedEbooks.length > 0) { %>
+                                <% relatedEbooks.forEach(relatedEbook => { %>
+                                    <% if (relatedEbook.id !== ebook.id) { %>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                                 style="width: 40px; height: 40px;">
+                                                <i class="fas fa-file-pdf text-white"></i>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1">
+                                                    <a href="/ebooks/<%= relatedEbook.slug %>" class="text-decoration-none">
+                                                        <%= relatedEbook.title %>
+                                                    </a>
+                                                </h6>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-download me-1"></i>
+                                                    <%= relatedEbook.download_count || 0 %>
+                                                </small>
+                                            </div>
+                                        </div>
+                                    <% } %>
+                                <% }); %>
+                            <% } else { %>
+                                <p class="text-muted">Belum ada ebook terkait</p>
+                            <% } %>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-chart-bar me-2"></i>Statistik
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <div class="fw-bold fs-4 text-primary"><%= ebook.download_count || 0 %></div>
+                                    <small class="text-muted">Download</small>
+                                </div>
+                                <div class="col-6">
+                                    <div class="fw-bold fs-4 text-success">Gratis</div>
+                                    <small class="text-muted">Harga</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    

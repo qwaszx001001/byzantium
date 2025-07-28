@@ -11,8 +11,8 @@ router.get('/', async (req, res) => {
         // Get featured courses
         const featuredCourses = await Course.getAllPublished(6, 0);
         
-        // Get latest posts
-        const latestPosts = await Post.getAllPublished(4, 0);
+        // Get latest activities
+        const latestActivities = await Post.getAllPublished(4, 0);
         
         // Get latest pedia articles
         const latestPedia = await Pedia.getAllPublished(4, 0);
@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
         res.render('home/index', {
             title: 'Beranda - ByzantiumEdu',
             featuredCourses,
-            latestPosts,
+            latestActivities,
             latestPedia
         });
     } catch (error) {
@@ -28,7 +28,7 @@ router.get('/', async (req, res) => {
         res.render('home/index', {
             title: 'Beranda - ByzantiumEdu',
             featuredCourses: [],
-            latestPosts: [],
+            latestActivities: [],
             latestPedia: []
         });
     }

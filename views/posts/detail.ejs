@@ -1,0 +1,115 @@
+<%- include('../layouts/main', { title: title, user: user }) %>
+
+
+        <div class="container py-5">
+            <div class="row">
+                <!-- Activity Content -->
+                <div class="col-lg-8">
+                    <!-- Featured Image -->
+                    <% if (post.featured_image) { %>
+                        <div class="mb-4">
+                            <img src="<%= post.featured_image %>" class="img-fluid rounded shadow" alt="<%= post.title %>">
+                        </div>
+                    <% } %>
+
+                    <!-- Activity Info -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h1 class="card-title fw-bold mb-3"><%= post.title %></h1>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-calendar text-primary me-2"></i>
+                                        <span class="text-muted">Tanggal: <strong><%= post.activity_date ? new Date(post.activity_date).toLocaleDateString('id-ID') : 'Tidak ditentukan' %></strong></span>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                        <span class="text-muted">Lokasi: <strong><%= post.location || 'Tidak ditentukan' %></strong></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-tag text-primary me-2"></i>
+                                        <span class="text-muted">Kategori: <strong><%= post.category_name || 'Umum' %></strong></span>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-user text-primary me-2"></i>
+                                        <span class="text-muted">Dibuat oleh: <strong><%= post.author_name || 'Admin' %></strong></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <% if (post.excerpt) { %>
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <strong>Deskripsi Singkat:</strong><br>
+                                    <%= post.excerpt %>
+                                </div>
+                            <% } %>
+
+                            <div class="content-area">
+                                <h5 class="fw-bold mb-3">Detail Kegiatan</h5>
+                                <%- post.content %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Video Section -->
+                    <% if (post.video_url) { %>
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-video me-2"></i>Video Dokumentasi</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="ratio ratio-16x9">
+                                    <iframe src="<%= getYouTubeEmbedUrl(post.video_url) %>" 
+                                            title="<%= post.title %>" 
+                                            frameborder="0" 
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                            allowfullscreen></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <!-- Activity Gallery -->
+                    <% if (typeof postImages !== 'undefined' && postImages.length > 0) { %>
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-images me-2"></i>Gallery Foto</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-2">
+                                    <% postImages.forEach((image, index) => { %>
+                                        <div class="col-6">
+                                            <a href="<%= image.image_path %>" data-lightbox="gallery" data-title="<%= post.title %>">
+                                                <img src="<%= image.image_path %>" class="img-fluid rounded" alt="Foto kegiatan" style="height: 120px; object-fit: cover; width: 100%;">
+                                            </a>
+                                        </div>
+                                    <% }); %>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+
+                    <!-- Related Activities -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Kegiatan Terkait</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted small">Kegiatan lain yang mungkin menarik untuk Anda</p>
+                            <div class="text-center py-3">
+                                <i class="fas fa-spinner fa-spin text-muted"></i>
+                                <p class="text-muted small mt-2">Memuat kegiatan terkait...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    

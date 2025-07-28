@@ -9,30 +9,43 @@ router.get('/', async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = 12;
         const offset = (page - 1) * limit;
+        const search = req.query.search;
         
-        const articles = await Pedia.getAllPublished(limit, offset);
-        const totalArticles = await Pedia.countPublished();
+        let articles, totalArticles;
+        
+        if (search) {
+            articles = await Pedia.search(search, limit);
+            totalArticles = articles.length;
+        } else {
+            articles = await Pedia.getAllPublished(limit, offset);
+            totalArticles = await Pedia.countPublished();
+        }
+        
         const totalPages = Math.ceil(totalArticles / limit);
         
         res.render('pedia/index', {
-            title: 'Pedia - ByzantiumEdu',
+            title: 'Artikel Pedia - ByzantiumEdu',
             articles,
             currentPage: page,
             totalPages,
             hasNextPage: page < totalPages,
             hasPrevPage: page > 1,
-            query: req.query.q || ''
+            search,
+            isAuthenticated: req.session.user ? true : false,
+            user: req.session.user
         });
     } catch (error) {
         console.error('Pedia page error:', error);
         res.render('pedia/index', {
-            title: 'Pedia - ByzantiumEdu',
+            title: 'Artikel Pedia - ByzantiumEdu',
             articles: [],
             currentPage: 1,
             totalPages: 1,
             hasNextPage: false,
             hasPrevPage: false,
-            query: req.query.q || ''
+            search: req.query.search,
+            isAuthenticated: req.session.user ? true : false,
+            user: req.session.user
         });
     }
 });
@@ -41,9 +54,9 @@ router.get('/', async (req, res) => {
 router.get('/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
-        const article = await Pedia.findBySlug(slug);
+        const pedia = await Pedia.findBySlug(slug);
         
-        if (!article) {
+        if (!pedia) {
             return res.status(404).render('error/404', {
                 title: 'Artikel Tidak Ditemukan',
                 user: req.session.user
@@ -51,15 +64,17 @@ router.get('/:slug', async (req, res) => {
         }
         
         // Increment view count
-        await Pedia.incrementViewCount(article.id);
+        await Pedia.incrementViewCount(pedia.id);
         
-        // Get random articles for sidebar
-        const randomArticles = await Pedia.getRandom(5);
+        // Get related articles
+        const relatedArticles = await Pedia.getRandom(3);
         
         res.render('pedia/detail', {
-            title: `${article.title} - ByzantiumEdu`,
-            article,
-            randomArticles
+            title: `${pedia.title} - ByzantiumEdu`,
+            pedia,
+            relatedArticles,
+            isAuthenticated: req.session.user ? true : false,
+            user: req.session.user
         });
     } catch (error) {
         console.error('Pedia detail error:', error);

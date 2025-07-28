@@ -17,13 +17,13 @@ app.use(helmet({
     contentSecurityPolicy: {
         directives: {
             defaultSrc: ["'self'"],
-            styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com"],
+            styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com"],
             scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com"],
             scriptSrcAttr: ["'unsafe-inline'"],
-            fontSrc: ["'self'", "https://cdnjs.cloudflare.com"],
+            fontSrc: ["'self'", "https://cdnjs.cloudflare.com", "https://fonts.gstatic.com"],
             imgSrc: ["'self'", "data:", "https:"],
             connectSrc: ["'self'"],
-            frameSrc: ["'self'"],
+            frameSrc: ["'self'", "https://www.youtube.com", "https://youtube.com", "https://www.youtube-nocookie.com", "https://youtu.be"],
             objectSrc: ["'none'"],
             upgradeInsecureRequests: []
         }
@@ -70,6 +70,8 @@ const postRoutes = require('./routes/posts');
 const pediaRoutes = require('./routes/pedia');
 const adminRoutes = require('./routes/admin');
 const homeRoutes = require('./routes/home');
+const enrollmentRoutes = require('./routes/enrollment');
+const ebookRoutes = require('./routes/ebooks');
 
 app.use('/', homeRoutes);
 app.use('/auth', authRoutes);
@@ -77,6 +79,8 @@ app.use('/courses', courseRoutes);
 app.use('/posts', postRoutes);
 app.use('/pedia', pediaRoutes);
 app.use('/admin', adminRoutes);
+app.use('/enrollment', enrollmentRoutes);
+app.use('/ebooks', ebookRoutes);
 
 // 404 handler
 app.use((req, res) => {

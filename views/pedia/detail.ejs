@@ -1,0 +1,238 @@
+<%- include('../layouts/main', { title: title, user: user }) %>
+
+
+        <div class="container py-5">
+            <!-- Article Header -->
+            <div class="row mb-5">
+                <div class="col-lg-8 mx-auto">
+                    <!-- Title -->
+                    <h1 class="fw-bold mb-3 text-center"><%= pedia.title %></h1>
+                    
+                    <!-- Author Info -->
+                    <div class="d-flex align-items-center justify-content-center mb-4">
+                        <% if (pedia.author_avatar) { %>
+                            <img src="<%= pedia.author_avatar %>" 
+                                 alt="<%= pedia.author_name %>" 
+                                 class="rounded-circle me-3" 
+                                 style="width: 60px; height: 60px; object-fit: cover;">
+                        <% } else { %>
+                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-3" 
+                                 style="width: 60px; height: 60px;">
+                                <i class="fas fa-user fa-2x text-white"></i>
+                            </div>
+                        <% } %>
+                        <div class="text-center">
+                            <div class="fw-bold fs-5"><%= pedia.author_name %></div>
+                            <% if (pedia.author_bio) { %>
+                                <div class="text-muted"><%= pedia.author_bio %></div>
+                            <% } %>
+                            <small class="text-muted">
+                                <i class="fas fa-calendar me-1"></i>
+                                <%= new Date(pedia.created_at).toLocaleDateString('id-ID', { 
+                                    year: 'numeric', 
+                                    month: 'long', 
+                                    day: 'numeric' 
+                                }) %>
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Category Badge -->
+                    <% if (pedia.category_name) { %>
+                        <div class="text-center mb-4">
+                            <span class="badge bg-primary fs-6"><%= pedia.category_name %></span>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Banner Image -->
+            <% if (pedia.featured_image) { %>
+                <div class="row mb-5">
+                    <div class="col-12">
+                        <div class="text-center">
+                            <img src="<%= pedia.featured_image %>" 
+                                 alt="<%= pedia.title %>" 
+                                 class="img-fluid rounded shadow" 
+                                 style="max-height: 400px; object-fit: cover;">
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+
+            <!-- Article Content -->
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card shadow-sm">
+                        <div class="card-body p-5">
+                            <!-- Excerpt -->
+                            <% if (pedia.excerpt) { %>
+                                <div class="alert alert-info mb-4">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <strong>Ringkasan:</strong> <%= pedia.excerpt %>
+                                </div>
+                            <% } %>
+
+                            <!-- Content -->
+                            <div class="article-content">
+                                <%- pedia.content %>
+                            </div>
+
+                            <style>
+                            .article-content {
+                                font-size: 1.1rem;
+                                line-height: 1.8;
+                                color: #333;
+                            }
+                            
+                            .article-content h1, .article-content h2, .article-content h3, 
+                            .article-content h4, .article-content h5, .article-content h6 {
+                                margin-top: 2rem;
+                                margin-bottom: 1rem;
+                                color: #2c3e50;
+                                font-weight: 600;
+                            }
+                            
+                            .article-content h1 { font-size: 2.5rem; }
+                            .article-content h2 { font-size: 2rem; }
+                            .article-content h3 { font-size: 1.75rem; }
+                            .article-content h4 { font-size: 1.5rem; }
+                            .article-content h5 { font-size: 1.25rem; }
+                            .article-content h6 { font-size: 1.1rem; }
+                            
+                            .article-content p {
+                                margin-bottom: 1.5rem;
+                                text-align: justify;
+                            }
+                            
+                            .article-content ul, .article-content ol {
+                                margin-bottom: 1.5rem;
+                                padding-left: 2rem;
+                            }
+                            
+                            .article-content li {
+                                margin-bottom: 0.5rem;
+                            }
+                            
+                            .article-content blockquote {
+                                border-left: 4px solid #007bff;
+                                padding-left: 1rem;
+                                margin: 2rem 0;
+                                font-style: italic;
+                                color: #666;
+                            }
+                            
+                            .article-content img {
+                                max-width: 100%;
+                                height: auto;
+                                border-radius: 8px;
+                                margin: 1.5rem 0;
+                                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                            }
+                            
+                            .article-content code {
+                                background-color: #f8f9fa;
+                                padding: 0.2rem 0.4rem;
+                                border-radius: 4px;
+                                font-family: 'Courier New', monospace;
+                                color: #e83e8c;
+                            }
+                            
+                            .article-content pre {
+                                background-color: #f8f9fa;
+                                padding: 1rem;
+                                border-radius: 8px;
+                                overflow-x: auto;
+                                margin: 1.5rem 0;
+                                border: 1px solid #e9ecef;
+                            }
+                            
+                            .article-content table {
+                                width: 100%;
+                                border-collapse: collapse;
+                                margin: 1.5rem 0;
+                            }
+                            
+                            .article-content th, .article-content td {
+                                border: 1px solid #dee2e6;
+                                padding: 0.75rem;
+                                text-align: left;
+                            }
+                            
+                            .article-content th {
+                                background-color: #f8f9fa;
+                                font-weight: 600;
+                            }
+                            </style>
+
+                            <!-- Article Footer -->
+                            <hr class="my-5">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <small class="text-muted">
+                                        <i class="fas fa-eye me-1"></i>
+                                        <%= pedia.view_count || 0 %> kali dibaca
+                                    </small>
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    <small class="text-muted">
+                                        <i class="fas fa-clock me-1"></i>
+                                        Terakhir diperbarui: <%= new Date(pedia.updated_at).toLocaleDateString('id-ID') %>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related Articles -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <h3 class="fw-bold mb-4">Artikel Terkait</h3>
+                    <div class="row">
+                        <% if (relatedArticles && relatedArticles.length > 0) { %>
+                            <% relatedArticles.forEach(article => { %>
+                                <div class="col-md-4 mb-4">
+                                    <div class="card h-100 shadow-sm">
+                                        <% if (article.featured_image) { %>
+                                            <img src="<%= article.featured_image %>" 
+                                                 class="card-img-top" 
+                                                 alt="<%= article.title %>"
+                                                 style="height: 200px; object-fit: cover;">
+                                        <% } %>
+                                        <div class="card-body">
+                                            <h5 class="card-title fw-bold">
+                                                <a href="/pedia/<%= article.slug %>" class="text-decoration-none">
+                                                    <%= article.title %>
+                                                </a>
+                                            </h5>
+                                            <p class="card-text text-muted">
+                                                <%= article.excerpt ? article.excerpt.substring(0, 100) + '...' : '' %>
+                                            </p>
+                                            <div class="d-flex align-items-center">
+                                                <% if (article.author_avatar) { %>
+                                                    <img src="<%= article.author_avatar %>" 
+                                                         alt="<%= article.author_name %>" 
+                                                         class="rounded-circle me-2" 
+                                                         style="width: 30px; height: 30px; object-fit: cover;">
+                                                <% } %>
+                                                <small class="text-muted">
+                                                    <%= article.author_name %> • 
+                                                    <%= new Date(article.created_at).toLocaleDateString('id-ID') %>
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <div class="col-12 text-center">
+                                <p class="text-muted">Belum ada artikel terkait</p>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    

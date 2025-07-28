@@ -1,92 +1,13 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Postingan - Admin ByzantiumEdu</title>
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="/css/style.css" rel="stylesheet">
-</head>
-<body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="/">
-                <i class="fas fa-graduation-cap me-2"></i>ByzantiumEdu
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Beranda</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/courses">Kursus</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/posts">Blog</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/pedia">Pedia</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <% if (isAuthenticated) { %>
-                        <% if (isAdmin) { %>
-                            <li class="nav-item">
-                                <a class="nav-link active" href="/admin">
-                                    <i class="fas fa-cog me-1"></i>Admin
-                                </a>
-                            </li>
-                        <% } %>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user me-1"></i><%= user.full_name %>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/profile">Profil</a></li>
-                                <li><a class="dropdown-item" href="/my-courses">Kursus Saya</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="/auth/logout">Logout</a></li>
-                            </ul>
-                        </li>
-                    <% } %>
-                </ul>
-            </div>
-        </div>
-    </nav>
+<%- include('../../layouts/admin', { title: title, user: user }) %>
 
-    <!-- Flash Messages -->
-    <% if (success_msg && success_msg.length > 0) { %>
-        <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
-            <i class="fas fa-check-circle me-2"></i><%= success_msg %>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    <% } %>
-    
-    <% if (error_msg && error_msg.length > 0) { %>
-        <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
-            <i class="fas fa-exclamation-circle me-2"></i><%= error_msg %>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    <% } %>
 
-    <!-- Main Content -->
-    <main>
         <div class="container py-5">
             <div class="row">
                 <div class="col-12">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <div>
-                            <h1 class="fw-bold">Tambah Postingan Baru</h1>
-                            <p class="text-muted">Buat postingan baru untuk blog ByzantiumEdu</p>
+                            <h1 class="fw-bold">Tambah Kegiatan Mengajar</h1>
+                            <p class="text-muted">Bagikan kegiatan mengajar, workshop, atau aktivitas pendidikan</p>
                         </div>
                         <a href="/admin/posts" class="btn btn-outline-primary">
                             <i class="fas fa-arrow-left me-2"></i>Kembali ke Daftar Postingan
@@ -99,38 +20,77 @@
                                 <div class="row">
                                     <div class="col-md-8">
                                         <div class="mb-3">
-                                            <label for="title" class="form-label">Judul Postingan</label>
-                                            <input type="text" class="form-control" id="title" name="title" required>
+                                            <label for="title" class="form-label">Judul Kegiatan</label>
+                                            <input type="text" class="form-control" id="title" name="title" placeholder="Contoh: Workshop Coding untuk Siswa SMA" required>
                                         </div>
                                         
                                         <div class="mb-3">
-                                            <label for="excerpt" class="form-label">Ringkasan</label>
-                                            <textarea class="form-control" id="excerpt" name="excerpt" rows="3"></textarea>
+                                            <label for="excerpt" class="form-label">Deskripsi Singkat</label>
+                                            <textarea class="form-control" id="excerpt" name="excerpt" rows="3" placeholder="Jelaskan secara singkat tentang kegiatan ini..."></textarea>
                                         </div>
                                         
                                         <div class="mb-3">
-                                            <label for="content" class="form-label">Konten</label>
-                                            <textarea class="form-control" id="content" name="content" rows="10" required></textarea>
+                                            <label for="content" class="form-label">Detail Kegiatan</label>
+                                            <textarea class="form-control" id="content" name="content" rows="12" placeholder="Ceritakan detail kegiatan mengajar, workshop, atau aktivitas pendidikan yang dilakukan..." required></textarea>
+                                            <div class="form-text">
+                                                <i class="fas fa-lightbulb me-1"></i>
+                                                Tips: Ceritakan tentang tujuan kegiatan, peserta, materi yang diajarkan, dan hasil yang dicapai
+                                            </div>
                                         </div>
                                     </div>
                                     
                                     <div class="col-md-4">
                                         <div class="mb-3">
-                                            <label for="featured_image" class="form-label">Gambar Utama</label>
+                                            <label for="featured_image" class="form-label">Foto Utama Kegiatan</label>
                                             <input type="file" class="form-control" id="featured_image" name="featured_image" accept="image/*">
-                                            <small class="text-muted">Format: JPG, PNG, GIF. Maksimal 2MB.</small>
+                                            <small class="text-muted">Format: JPG, PNG, GIF. Maksimal 5MB.</small>
+                                            <div class="form-text">
+                                                <i class="fas fa-camera me-1"></i>
+                                                Upload foto utama kegiatan (akan ditampilkan sebagai thumbnail)
+                                            </div>
                                         </div>
                                         
                                         <div class="mb-3">
-                                            <label for="category_id" class="form-label">Kategori</label>
+                                            <label for="activity_images" class="form-label">Foto Tambahan Kegiatan</label>
+                                            <input type="file" class="form-control" id="activity_images" name="activity_images" accept="image/*" multiple>
+                                            <small class="text-muted">Format: JPG, PNG, GIF. Maksimal 5MB per file. Bisa pilih lebih dari 1 foto.</small>
+                                            <div class="form-text">
+                                                <i class="fas fa-images me-1"></i>
+                                                Upload foto tambahan untuk dokumentasi kegiatan (opsional)
+                                            </div>
+                                            <div id="image-preview" class="mt-2"></div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="video_url" class="form-label">Video Kegiatan (Opsional)</label>
+                                            <input type="url" class="form-control" id="video_url" name="video_url" placeholder="https://www.youtube.com/watch?v=...">
+                                            <small class="text-muted">Link video YouTube atau platform video lainnya</small>
+                                            <div class="form-text">
+                                                <i class="fas fa-video me-1"></i>
+                                                Bagikan video dokumentasi kegiatan (bisa dikosongkan)
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="category_id" class="form-label">Kategori Kegiatan</label>
                                             <select class="form-select" id="category_id" name="category_id">
                                                 <option value="">Pilih Kategori</option>
-                                                <option value="1">Teknologi</option>
-                                                <option value="2">Pendidikan</option>
-                                                <option value="3">Bisnis</option>
-                                                <option value="4">Kesehatan</option>
-                                                <option value="5">Seni & Budaya</option>
+                                                <option value="1">Workshop & Pelatihan</option>
+                                                <option value="2">Kelas Mengajar</option>
+                                                <option value="3">Seminar & Webinar</option>
+                                                <option value="4">Kegiatan Siswa</option>
+                                                <option value="5">Aktivitas Luar Kelas</option>
                                             </select>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="activity_date" class="form-label">Tanggal Kegiatan</label>
+                                            <input type="date" class="form-control" id="activity_date" name="activity_date">
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="location" class="form-label">Lokasi Kegiatan</label>
+                                            <input type="text" class="form-control" id="location" name="location" placeholder="Contoh: Ruang Lab Komputer, SMA Negeri 1">
                                         </div>
                                         
                                         <div class="mb-3">
@@ -145,7 +105,7 @@
                                 
                                 <div class="d-flex gap-2">
                                     <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-save me-2"></i>Simpan Postingan
+                                        <i class="fas fa-save me-2"></i>Simpan Kegiatan
                                     </button>
                                     <button type="submit" name="action" value="draft" class="btn btn-outline-secondary">
                                         <i class="fas fa-file me-2"></i>Simpan sebagai Draft
@@ -157,24 +117,4 @@
                 </div>
             </div>
         </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-dark text-light py-5 mt-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <h5><i class="fas fa-graduation-cap me-2"></i>ByzantiumEdu</h5>
-                    <p class="text-muted">Platform pembelajaran online terbaik untuk semua kalangan.</p>
-                </div>
-                <div class="col-md-8 text-md-end">
-                    <p class="text-muted mb-0">&copy; 2024 ByzantiumEdu. All rights reserved.</p>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html> 
+    

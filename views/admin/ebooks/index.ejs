@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Admin Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/admin">
+                <i class="fas fa-cog me-2"></i>Admin Panel
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="adminNavbar">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/courses">Kursus</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/posts">Kegiatan</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/pedia">Artikel Pedia</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/admin/ebooks">Ebook</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/instructors">Instruktur</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/users">Users</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user me-1"></i><%= user.full_name %>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/">Lihat Website</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/auth/logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container py-4">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="fw-bold mb-2">Kelola Ebook</h1>
+                    <p class="text-muted">Upload dan kelola ebook gratis untuk pengguna</p>
+                </div>
+                <a href="/admin/ebooks/create" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Tambah Ebook
+                </a>
+            </div>
+
+            <!-- Flash Messages -->
+            <% if (success_msg && success_msg.length > 0) { %>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i><%= success_msg %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <% } %>
+            
+            <% if (error_msg && error_msg.length > 0) { %>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i><%= error_msg %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <% } %>
+
+            <!-- Ebooks Table -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-book me-2"></i>Daftar Ebook
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <% if (ebooks && ebooks.length > 0) { %>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Judul</th>
+                                        <th>Kategori</th>
+                                        <th>Penulis</th>
+                                        <th>Status</th>
+                                        <th>Download</th>
+                                        <th>Tanggal</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% ebooks.forEach(ebook => { %>
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                                         style="width: 40px; height: 40px;">
+                                                        <i class="fas fa-file-pdf text-white"></i>
+                                                    </div>
+                                                    <div>
+                                                        <div class="fw-bold"><%= ebook.title %></div>
+                                                        <small class="text-muted">
+                                                            <%= ebook.description ? ebook.description.substring(0, 50) + '...' : 'Tidak ada deskripsi' %>
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <% if (ebook.category_name) { %>
+                                                    <span class="badge bg-primary"><%= ebook.category_name %></span>
+                                                <% } else { %>
+                                                    <span class="badge bg-secondary">Tidak ada kategori</span>
+                                                <% } %>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <% if (ebook.author_avatar) { %>
+                                                        <img src="<%= ebook.author_avatar %>" 
+                                                             alt="<%= ebook.author_name %>" 
+                                                             class="rounded-circle me-2" 
+                                                             style="width: 30px; height: 30px; object-fit: cover;">
+                                                    <% } else { %>
+                                                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-2" 
+                                                             style="width: 30px; height: 30px;">
+                                                            <i class="fas fa-user text-white"></i>
+                                                        </div>
+                                                    <% } %>
+                                                    <div>
+                                                        <div class="fw-bold small"><%= ebook.author_name %></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <% if (ebook.status === 'published') { %>
+                                                    <span class="badge bg-success">Published</span>
+                                                <% } else { %>
+                                                    <span class="badge bg-warning">Draft</span>
+                                                <% } %>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-info">
+                                                    <i class="fas fa-download me-1"></i>
+                                                    <%= ebook.download_count || 0 %>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <small class="text-muted">
+                                                    <%= new Date(ebook.created_at).toLocaleDateString('id-ID') %>
+                                                </small>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a href="/ebooks/<%= ebook.slug %>" class="btn btn-sm btn-outline-primary" target="_blank">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <a href="/admin/ebooks/<%= ebook.id %>/edit" class="btn btn-sm btn-outline-warning">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <button type="button" class="btn btn-sm btn-outline-danger" 
+                                                            onclick="deleteEbook(<%= ebook.id %>, '<%= ebook.title %>')">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <% if (totalPages > 1) { %>
+                            <nav aria-label="Ebooks pagination" class="mt-4">
+                                <ul class="pagination justify-content-center">
+                                    <% if (hasPrevPage) { %>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page=<%= currentPage - 1 %>">Previous</a>
+                                        </li>
+                                    <% } %>
+                                    
+                                    <% for (let i = 1; i <= totalPages; i++) { %>
+                                        <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                            <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                                        </li>
+                                    <% } %>
+                                    
+                                    <% if (hasNextPage) { %>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+                                        </li>
+                                    <% } %>
+                                </ul>
+                            </nav>
+                        <% } %>
+                    <% } else { %>
+                        <div class="text-center py-5">
+                            <i class="fas fa-book fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">Belum ada ebook</h5>
+                            <p class="text-muted">Mulai dengan menambahkan ebook pertama</p>
+                            <a href="/admin/ebooks/create" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Tambah Ebook Pertama
+                            </a>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-3 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2024 ByzantiumEdu Admin Panel. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Delete Confirmation Script -->
+    <script>
+        function deleteEbook(id, title) {
+            if (confirm(`Apakah Anda yakin ingin menghapus ebook "${title}"?`)) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/admin/ebooks/${id}/delete`;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+</body>
+</html> 

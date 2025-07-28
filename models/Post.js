@@ -3,11 +3,23 @@ const db = require('../config/database');
 class Post {
     static async create(postData) {
         try {
-            const { title, slug, content, excerpt, featured_image, category_id, author_id, status = 'draft' } = postData;
+            const { 
+                title, 
+                slug, 
+                content, 
+                excerpt, 
+                featured_image, 
+                video_url,
+                category_id, 
+                author_id, 
+                status = 'draft',
+                activity_date,
+                location
+            } = postData;
             
             const [result] = await db.execute(
-                'INSERT INTO posts (title, slug, content, excerpt, featured_image, category_id, author_id, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-                [title, slug, content, excerpt, featured_image, category_id, author_id, status]
+                'INSERT INTO posts (title, slug, content, excerpt, featured_image, video_url, category_id, author_id, status, activity_date, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                [title, slug, content, excerpt, featured_image, video_url, category_id, author_id, status, activity_date, location]
             );
             
             return result.insertId;

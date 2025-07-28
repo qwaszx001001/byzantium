@@ -1,13 +1,14 @@
 const express = require('express');
 const Post = require('../models/Post');
+const PostImage = require('../models/PostImage');
 
 const router = express.Router();
 
-// All posts page
+// All posts page (Gallery Kegiatan)
 router.get('/', async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
-        const limit = 10;
+        const limit = 12; // Show more items for gallery
         const offset = (page - 1) * limit;
         
         const posts = await Post.getAllPublished(limit, offset);
@@ -15,7 +16,7 @@ router.get('/', async (req, res) => {
         const totalPages = Math.ceil(totalPosts / limit);
         
         res.render('posts/index', {
-            title: 'Blog - ByzantiumEdu',
+            title: 'Gallery Kegiatan - ByzantiumEdu',
             posts,
             currentPage: page,
             totalPages,
@@ -26,7 +27,7 @@ router.get('/', async (req, res) => {
     } catch (error) {
         console.error('Posts page error:', error);
         res.render('posts/index', {
-            title: 'Blog - ByzantiumEdu',
+            title: 'Gallery Kegiatan - ByzantiumEdu',
             posts: [],
             currentPage: 1,
             totalPages: 1,
@@ -37,7 +38,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Post detail page
+// Post detail page (Activity Detail)
 router.get('/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
@@ -45,17 +46,45 @@ router.get('/:slug', async (req, res) => {
         
         if (!post) {
             return res.status(404).render('error/404', {
-                title: 'Postingan Tidak Ditemukan',
+                title: 'Kegiatan Tidak Ditemukan',
                 user: req.session.user
             });
         }
         
+        // Get activity images
+        const postImages = await PostImage.getByPostId(post.id);
+        
         // Increment view count
         await Post.incrementViewCount(post.id);
         
+        // Helper function untuk YouTube embed URL
+        const getYouTubeEmbedUrl = (url) => {
+            if (!url) return '';
+            
+            let videoId = '';
+            if (url.includes('youtube.com/watch?v=')) {
+                videoId = url.split('v=')[1].split('&')[0];
+            } else if (url.includes('youtu.be/')) {
+                videoId = url.split('youtu.be/')[1].split('?')[0];
+            } else if (url.includes('youtube.com/embed/')) {
+                videoId = url.split('embed/')[1].split('?')[0];
+            }
+            
+            if (videoId) {
+                return `https://www.youtube-nocookie.com/embed/${videoId}`;
+            }
+            
+            return url;
+        };
+        
         res.render('posts/detail', {
             title: `${post.title} - ByzantiumEdu`,
-            post
+            post,
+            postImages,
+            getYouTubeEmbedUrl,
+            isAuthenticated: req.session.user ? true : false,
+            isAdmin: req.session.user && req.session.user.role === 'admin',
+            user: req.session.user
         });
     } catch (error) {
         console.error('Post detail error:', error);

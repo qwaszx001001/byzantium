@@ -35,10 +35,14 @@ CREATE TABLE IF NOT EXISTS courses (
     description TEXT,
     content LONGTEXT,
     thumbnail VARCHAR(255),
+    video_url VARCHAR(255), -- URL video utama course
     category_id INT,
     instructor_id INT,
     is_published BOOLEAN DEFAULT FALSE,
     is_free BOOLEAN DEFAULT TRUE,
+    price DECIMAL(10,2) DEFAULT 0.00,
+    duration INT DEFAULT 0, -- dalam menit
+    level ENUM('beginner', 'intermediate', 'advanced') DEFAULT 'beginner',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
@@ -61,8 +65,8 @@ CREATE TABLE IF NOT EXISTS course_lessons (
     id INT PRIMARY KEY AUTO_INCREMENT,
     module_id INT NOT NULL,
     title VARCHAR(200) NOT NULL,
-    content LONGTEXT,
-    video_url VARCHAR(255),
+    content LONGTEXT, -- Materi penjelasan
+    video_url VARCHAR(255), -- Link video YouTube
     duration INT DEFAULT 0, -- dalam menit
     order_index INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -76,15 +80,29 @@ CREATE TABLE IF NOT EXISTS posts (
     slug VARCHAR(200) UNIQUE NOT NULL,
     content LONGTEXT,
     excerpt TEXT,
-    featured_image VARCHAR(255),
+    featured_image VARCHAR(255), -- Gambar utama
+    video_url VARCHAR(255), -- URL video kegiatan (opsional)
     category_id INT,
     author_id INT NOT NULL,
     status ENUM('draft', 'published') DEFAULT 'draft',
     view_count INT DEFAULT 0,
+    activity_date DATE, -- Tanggal kegiatan
+    location VARCHAR(255), -- Lokasi kegiatan
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
     FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Tabel post_images untuk multiple images
+CREATE TABLE IF NOT EXISTS post_images (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    post_id INT NOT NULL,
+    image_path VARCHAR(255) NOT NULL,
+    caption TEXT,
+    order_index INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
 );
 
 -- Tabel pedia_articles

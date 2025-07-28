@@ -1,0 +1,95 @@
+<%- include('../../layouts/admin', { title: title, user: user }) %>
+
+
+        <div class="container py-5">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1 class="fw-bold mb-2">Tambah Instruktur Baru</h1>
+                            <p class="text-muted mb-0">Tambahkan instruktur baru ke platform</p>
+                        </div>
+                        <a href="/admin/instructors" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Kembali
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-user-plus me-2"></i>Form Tambah Instruktur</h5>
+                        </div>
+                        <div class="card-body">
+                            <form action="/admin/instructors/create" method="POST" enctype="multipart/form-data">
+                                <div class="row">
+                                    <!-- Foto Profil -->
+                                    <div class="col-12 mb-4">
+                                        <label for="avatar" class="form-label">Foto Profil</label>
+                                        <div class="d-flex align-items-center">
+                                            <div class="me-3">
+                                                <div id="avatarPreview" class="rounded-circle bg-light d-flex align-items-center justify-content-center" 
+                                                     style="width: 100px; height: 100px; border: 2px dashed #dee2e6;">
+                                                    <i class="fas fa-user fa-2x text-muted"></i>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*">
+                                                <div class="form-text">Upload foto profil instruktur (opsional). Format: JPG, PNG, GIF. Maksimal 5MB.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Nama Lengkap -->
+                                    <div class="col-md-6 mb-3">
+                                        <label for="full_name" class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="full_name" name="full_name" required>
+                                    </div>
+
+                                    <!-- Username -->
+                                    <div class="col-md-6 mb-3">
+                                        <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="username" name="username" required>
+                                    </div>
+
+                                    <!-- Email -->
+                                    <div class="col-md-6 mb-3">
+                                        <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                                        <input type="email" class="form-control" id="email" name="email" required>
+                                    </div>
+
+                                    <!-- Password -->
+                                    <div class="col-md-6 mb-3">
+                                        <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
+                                        <input type="password" class="form-control" id="password" name="password" required>
+                                        <div class="form-text">Minimal 6 karakter</div>
+                                    </div>
+
+                                    <!-- Bio -->
+                                    <div class="col-12 mb-3">
+                                        <label for="bio" class="form-label">Bio / Deskripsi</label>
+                                        <textarea class="form-control" id="bio" name="bio" rows="4" 
+                                                  placeholder="Ceritakan tentang keahlian, pengalaman, atau spesialisasi instruktur..."></textarea>
+                                    </div>
+                                </div>
+
+                                <!-- Submit Buttons -->
+                                <div class="d-flex justify-content-end gap-2 mt-4">
+                                    <a href="/admin/instructors" class="btn btn-outline-secondary">
+                                        <i class="fas fa-times me-2"></i>Batal
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-2"></i>Simpan Instruktur
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    

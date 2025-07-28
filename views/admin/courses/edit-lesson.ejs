@@ -1,0 +1,132 @@
+<%- include('../../layouts/admin', { title: title, user: user }) %>
+
+
+        <div class="container py-5">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="/admin/courses">Kursus</a></li>
+                            <li class="breadcrumb-item"><a href="/admin/courses/<%= course.id %>/modules">Modul</a></li>
+                            <li class="breadcrumb-item"><a href="/admin/modules/<%= module.id %>/lessons">Lesson</a></li>
+                            <li class="breadcrumb-item active">Edit Lesson</li>
+                        </ol>
+                    </nav>
+                    
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1 class="fw-bold mb-2">Edit Lesson</h1>
+                            <p class="text-muted mb-0">
+                                Kursus: <strong><%= course.title %></strong> | 
+                                Modul: <strong><%= module.title %></strong>
+                            </p>
+                        </div>
+                        <a href="/admin/modules/<%= module.id %>/lessons" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Kembali ke Lesson
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Form -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-edit me-2"></i>Edit Lesson</h5>
+                        </div>
+                        <div class="card-body">
+                            <form action="/admin/lessons/<%= lesson.id %>/edit" method="POST">
+                                <div class="mb-3">
+                                    <label for="title" class="form-label">Judul Lesson <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="title" name="title" 
+                                           value="<%= lesson.title %>" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="content" class="form-label">Materi Penjelasan <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" id="content" name="content" rows="10" required><%= lesson.content %></textarea>
+                                    <div class="form-text">Gunakan HTML untuk formatting. Contoh: &lt;h3&gt;Judul&lt;/h3&gt;, &lt;p&gt;Paragraf&lt;/p&gt;</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="video_url" class="form-label">Link Video YouTube</label>
+                                    <input type="url" class="form-control" id="video_url" name="video_url" 
+                                           value="<%= lesson.video_url || '' %>" 
+                                           placeholder="https://www.youtube.com/watch?v=...">
+                                    <div class="form-text">Opsional. Masukkan link YouTube video</div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="duration" class="form-label">Durasi (menit)</label>
+                                            <input type="number" class="form-control" id="duration" name="duration" 
+                                                   value="<%= lesson.duration || 0 %>" min="0">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="order_index" class="form-label">Urutan</label>
+                                            <input type="number" class="form-control" id="order_index" name="order_index" 
+                                                   value="<%= lesson.order_index || 0 %>" min="0">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-2"></i>Simpan Perubahan
+                                    </button>
+                                    <a href="/admin/modules/<%= module.id %>/lessons" class="btn btn-outline-secondary">
+                                        <i class="fas fa-times me-2"></i>Batal
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Informasi Lesson</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <strong>ID Lesson:</strong><br>
+                                <span class="text-muted"><%= lesson.id %></span>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <strong>Dibuat:</strong><br>
+                                <span class="text-muted"><%= new Date(lesson.created_at).toLocaleDateString('id-ID') %></span>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <strong>Video URL:</strong><br>
+                                <% if (lesson.video_url) { %>
+                                    <a href="<%= lesson.video_url %>" target="_blank" class="text-primary">
+                                        <i class="fas fa-external-link-alt me-1"></i>Lihat Video
+                                    </a>
+                                <% } else { %>
+                                    <span class="text-muted">Tidak ada video</span>
+                                <% } %>
+                            </div>
+                            
+                            <hr>
+                            
+                            <div class="d-grid">
+                                <button type="button" class="btn btn-danger" onclick="deleteLesson()">
+                                    <i class="fas fa-trash me-2"></i>Hapus Lesson
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    

@@ -1,5 +1,6 @@
 const express = require('express');
 const Course = require('../models/Course');
+const Enrollment = require('../models/Enrollment');
 const { isAuthenticated } = require('../middleware/auth');
 
 const router = express.Router();
@@ -49,9 +50,19 @@ router.get('/:slug', async (req, res) => {
             });
         }
         
+        // Check if user is enrolled (if authenticated)
+        let isEnrolled = false;
+        if (req.session.user) {
+            isEnrolled = await Enrollment.isEnrolled(req.session.user.id, course.id);
+        }
+        
         res.render('courses/detail', {
             title: `${course.title} - ByzantiumEdu`,
-            course
+            course,
+            isEnrolled,
+            isAuthenticated: req.session.user ? true : false,
+            isAdmin: req.session.user && req.session.user.role === 'admin',
+            user: req.session.user
         });
     } catch (error) {
         console.error('Course detail error:', error);

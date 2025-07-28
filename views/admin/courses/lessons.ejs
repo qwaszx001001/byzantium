@@ -1,0 +1,64 @@
+<%- include('../../layouts/admin', { title: title, user: user }) %>
+
+<!-- Navigation -->
+    
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Kelola Lesson: <%= module.title %></h2>
+                <div>
+                    <a href="/admin/courses/<%= course.id %>/modules" class="btn btn-secondary me-2">Kembali ke Modul</a>
+                    <a href="/admin/courses" class="btn btn-outline-secondary">Kembali ke Kursus</a>
+                </div>
+            </div>
+
+            <!-- Course Info -->
+            <div class="alert alert-info">
+                <strong>Kursus:</strong> <%= course.title %> | 
+                <strong>Modul:</strong> <%= module.title %>
+            </div>
+
+            <!-- Add Lesson Form -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Tambah Lesson Baru</h5>
+                </div>
+                <div class="card-body">
+                    <form action="/admin/modules/<%= module.id %>/lessons" method="POST">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="title" class="form-label">Judul Lesson</label>
+                                    <input type="text" class="form-control" id="title" name="title" required>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="duration" class="form-label">Durasi (menit)</label>
+                                    <input type="number" class="form-control" id="duration" name="duration" value="0" min="0">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="order_index" class="form-label">Urutan</label>
+                                    <input type="number" class="form-control" id="order_index" name="order_index" value="0" min="0">
+                                        </div>
+    </div>
+</div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+    function deleteLesson(lessonId) {
+        if (confirm('Apakah Anda yakin ingin menghapus lesson ini? Tindakan ini tidak dapat dibatalkan.')) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/admin/lessons/${lessonId}/delete`;
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+    </script>

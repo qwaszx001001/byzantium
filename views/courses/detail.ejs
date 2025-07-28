@@ -1,6 +1,7 @@
-<%- include('../layouts/main', { title: title }) %>
+<%- include('../layouts/main', { title: title, user: user }) %>
 
-<div class="container py-5">
+
+        <div class="container py-5">
     <div class="row">
         <!-- Course Content -->
         <div class="col-lg-8">
@@ -74,11 +75,20 @@
                     </div>
 
                     <% if (isAuthenticated) { %>
-                        <form action="/courses/<%= course.id %>/enroll" method="POST" class="mt-4">
-                            <button type="submit" class="btn btn-primary w-100 enroll-btn">
-                                <i class="fas fa-play me-2"></i>Daftar Kursus
-                            </button>
-                        </form>
+                        <div class="mt-4" id="enrollment-section">
+                            <% if (isEnrolled) { %>
+                                <div class="alert alert-success mb-3">
+                                    <i class="fas fa-check-circle me-2"></i>Anda sudah terdaftar di kursus ini!
+                                </div>
+                                <a href="/enrollment/learn/<%= course.id %>" class="btn btn-success w-100">
+                                    <i class="fas fa-play me-2"></i>Lanjutkan Belajar
+                                </a>
+                            <% } else { %>
+                                <button type="button" class="btn btn-primary w-100 enroll-btn" onclick="enrollCourse(<%= course.id %>)">
+                                    <i class="fas fa-play me-2"></i>Daftar Kursus
+                                </button>
+                            <% } %>
+                        </div>
                     <% } else { %>
                         <div class="alert alert-info">
                             <i class="fas fa-info-circle me-2"></i>
@@ -101,50 +111,7 @@
                 </div>
             </div>
         </div>
+        </div>
     </div>
 </div>
-
-<style>
-.content-area {
-    line-height: 1.8;
-    color: #333;
-}
-
-.content-area h1, .content-area h2, .content-area h3, .content-area h4, .content-area h5, .content-area h6 {
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
-    font-weight: 600;
-}
-
-.content-area p {
-    margin-bottom: 1rem;
-}
-
-.content-area ul, .content-area ol {
-    margin-bottom: 1rem;
-    padding-left: 1.5rem;
-}
-
-.content-area blockquote {
-    border-left: 4px solid #667eea;
-    padding-left: 1rem;
-    margin: 1rem 0;
-    font-style: italic;
-    color: #666;
-}
-
-.content-area code {
-    background-color: #f8f9fa;
-    padding: 0.2rem 0.4rem;
-    border-radius: 0.25rem;
-    font-size: 0.875em;
-}
-
-.content-area pre {
-    background-color: #f8f9fa;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    overflow-x: auto;
-    margin: 1rem 0;
-}
-</style> 
+    

@@ -1,0 +1,128 @@
+<%- include('../../layouts/admin', { title: title, user: user }) %>
+
+
+        <div class="container py-5">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1 class="fw-bold mb-2">Kelola Instruktur</h1>
+                            <p class="text-muted mb-0">Daftar semua instruktur yang mengajar di platform ini</p>
+                        </div>
+                        <a href="/admin/instructors/create" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>Tambah Instruktur
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instructors List -->
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-users me-2"></i>Daftar Instruktur</h5>
+                </div>
+                <div class="card-body">
+                    <% if (instructors && instructors.length > 0) { %>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Foto</th>
+                                        <th>Nama</th>
+                                        <th>Email</th>
+                                        <th>Username</th>
+                                        <th>Jumlah Kursus</th>
+                                        <th>Bergabung</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% instructors.forEach(instructor => { %>
+                                        <tr>
+                                            <td>
+                                                <% if (instructor.avatar) { %>
+                                                    <img src="<%= instructor.avatar %>" 
+                                                         alt="<%= instructor.full_name %>" 
+                                                         class="rounded-circle" 
+                                                         style="width: 40px; height: 40px; object-fit: cover;">
+                                                <% } else { %>
+                                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" 
+                                                         style="width: 40px; height: 40px;">
+                                                        <i class="fas fa-user text-white"></i>
+                                                    </div>
+                                                <% } %>
+                                            </td>
+                                            <td>
+                                                <strong><%= instructor.full_name %></strong>
+                                                <% if (instructor.bio) { %>
+                                                    <br><small class="text-muted"><%= instructor.bio.substring(0, 50) %><%= instructor.bio.length > 50 ? '...' : '' %></small>
+                                                <% } %>
+                                            </td>
+                                            <td><%= instructor.email %></td>
+                                            <td><%= instructor.username %></td>
+                                            <td>
+                                                <span class="badge bg-primary"><%= instructor.course_count %> kursus</span>
+                                            </td>
+                                            <td>
+                                                <small class="text-muted">
+                                                    <%= new Date(instructor.created_at).toLocaleDateString('id-ID') %>
+                                                </small>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a href="/admin/instructors/<%= instructor.id %>" class="btn btn-sm btn-outline-info">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <a href="/admin/instructors/<%= instructor.id %>/edit" class="btn btn-sm btn-outline-warning">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteInstructor(<%= instructor.id %>)">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <% if (totalPages > 1) { %>
+                            <nav aria-label="Instructors pagination" class="mt-4">
+                                <ul class="pagination justify-content-center">
+                                    <% if (hasPrevPage) { %>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page=<%= currentPage - 1 %>">Previous</a>
+                                        </li>
+                                    <% } %>
+                                    
+                                    <% for (let i = 1; i <= totalPages; i++) { %>
+                                        <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                            <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                                        </li>
+                                    <% } %>
+                                    
+                                    <% if (hasNextPage) { %>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+                                        </li>
+                                    <% } %>
+                                </ul>
+                            </nav>
+                        <% } %>
+                    <% } else { %>
+                        <div class="text-center py-5">
+                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">Belum ada instruktur</h5>
+                            <p class="text-muted">Tambahkan instruktur pertama untuk platform ini</p>
+                            <a href="/admin/instructors/create" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Tambah Instruktur Pertama
+                            </a>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    

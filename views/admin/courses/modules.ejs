@@ -1,0 +1,43 @@
+<%- include('../../layouts/admin', { title: title, user: user }) %>
+
+<!-- Navigation -->
+    
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Kelola Modul: <%= course.title %></h2>
+                <a href="/admin/courses" class="btn btn-secondary">Kembali ke Kursus</a>
+            </div>
+
+            <!-- Add Module Form -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Tambah Modul Baru</h5>
+                </div>
+                <div class="card-body">
+                    <form action="/admin/courses/<%= course.id %>/modules" method="POST">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="title" class="form-label">Judul Modul</label>
+                                    <input type="text" class="form-control" id="title" name="title" required>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="order_index" class="form-label">Urutan</label>
+                                    <input type="number" class="form-control" id="order_index" name="order_index" value="0" min="0">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label class="form-label">&nbsp;</label>
+                                    <button type="submit" class="btn btn-primary w-100">Tambah Modul</button>
+                                        </div>
+    </div>
+</div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

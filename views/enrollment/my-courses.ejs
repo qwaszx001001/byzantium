@@ -1,0 +1,108 @@
+<%- include('../layouts/main', { title: title, user: user }) %>
+
+
+        <div class="container py-5">
+            <!-- Header -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h1 class="fw-bold mb-3">Kursus Saya</h1>
+                    <p class="text-muted lead">Kelola dan lanjutkan pembelajaran Anda</p>
+                </div>
+            </div>
+
+            <!-- Enrolled Courses -->
+            <% if (enrollments && enrollments.length > 0) { %>
+                <div class="row g-4">
+                    <% enrollments.forEach(enrollment => { %>
+                        <div class="col-lg-6 col-xl-4">
+                            <div class="card h-100 shadow-sm course-card">
+                                <!-- Course Thumbnail -->
+                                <% if (enrollment.thumbnail) { %>
+                                    <img src="<%= enrollment.thumbnail %>" class="card-img-top" alt="<%= enrollment.title %>" style="height: 200px; object-fit: cover;">
+                                <% } else { %>
+                                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                        <i class="fas fa-book fa-3x text-muted"></i>
+                                    </div>
+                                <% } %>
+                                
+                                <div class="card-body">
+                                    <h5 class="card-title fw-bold mb-2">
+                                        <a href="/courses/<%= enrollment.slug %>" class="text-decoration-none text-dark">
+                                            <%= enrollment.title %>
+                                        </a>
+                                    </h5>
+                                    
+                                    <p class="card-text text-muted small mb-3">
+                                        <%= enrollment.description ? (enrollment.description.length > 100 ? enrollment.description.substring(0, 100) + '...' : enrollment.description) : 'Tidak ada deskripsi' %>
+                                    </p>
+                                    
+                                    <div class="course-meta mb-3">
+                                        <div class="row text-muted small">
+                                            <div class="col-6">
+                                                <i class="fas fa-user me-1"></i>
+                                                <%= enrollment.instructor_name || 'Admin' %>
+                                            </div>
+                                            <div class="col-6">
+                                                <i class="fas fa-tag me-1"></i>
+                                                <%= enrollment.category_name || 'Umum' %>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row text-muted small mt-2">
+                                            <div class="col-6">
+                                                <i class="fas fa-clock me-1"></i>
+                                                <%= enrollment.duration ? Math.floor(enrollment.duration / 60) + ' jam' : 'Tidak ditentukan' %>
+                                            </div>
+                                            <div class="col-6">
+                                                <i class="fas fa-signal me-1"></i>
+                                                <%= enrollment.level || 'Beginner' %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Progress Bar -->
+                                    <div class="progress mb-3" style="height: 8px;">
+                                        <div class="progress-bar" role="progressbar" 
+                                             style="width: <%= enrollment.progress || 0 %>%" 
+                                             aria-valuenow="<%= enrollment.progress || 0 %>" 
+                                             aria-valuemin="0" 
+                                             aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <small class="text-muted">
+                                            Progress: <strong><%= enrollment.progress || 0 %>%</strong>
+                                        </small>
+                                        <small class="text-muted">
+                                            Terdaftar: <%= new Date(enrollment.enrolled_at).toLocaleDateString('id-ID') %>
+                                        </small>
+                                    </div>
+                                </div>
+                                
+                                <div class="card-footer bg-transparent">
+                                    <div class="d-flex gap-2">
+                                        <a href="/enrollment/learn/<%= enrollment.course_id %>" class="btn btn-primary btn-sm flex-fill">
+                                            <i class="fas fa-play me-1"></i>Lanjutkan
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="unenrollCourse(<%= enrollment.course_id %>)">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            <% } else { %>
+                <div class="text-center py-5">
+                    <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">Belum ada kursus yang diikuti</h5>
+                    <p class="text-muted">Mulai belajar dengan mendaftar kursus yang tersedia</p>
+                    <a href="/courses" class="btn btn-primary">
+                        <i class="fas fa-search me-2"></i>Jelajahi Kursus
+                    </a>
+                </div>
+            <% } %>
+        </div>
+    

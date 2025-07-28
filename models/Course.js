@@ -47,6 +47,28 @@ class Course {
         }
     }
 
+    static async findByIdWithModules(id) {
+        try {
+            const CourseModule = require('./CourseModule');
+            const CourseLesson = require('./CourseLesson');
+            
+            const course = await this.findById(id);
+            if (!course) return null;
+            
+            const modules = await CourseModule.getByCourseId(id);
+            
+            // Get lessons for each module
+            for (let module of modules) {
+                module.lessons = await CourseLesson.getByModuleId(module.id);
+            }
+            
+            course.modules = modules;
+            return course;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     static async findBySlug(slug) {
         try {
             const [rows] = await db.execute(`
@@ -82,7 +104,7 @@ class Course {
     static async getAll(limit = 10, offset = 0) {
         try {
             const [rows] = await db.query(`
-                SELECT c.*, cat.name as category_name, u.full_name as instructor_name 
+                SELECT c.*, cat.name as category_name, u.full_name as instructor_name, u.avatar as instructor_avatar 
                 FROM courses c 
                 LEFT JOIN categories cat ON c.category_id = cat.id 
                 LEFT JOIN users u ON c.instructor_id = u.id 

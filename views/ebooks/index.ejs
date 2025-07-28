@@ -1,0 +1,139 @@
+<%- include('../layouts/main', { title: title, user: user }) %>
+
+
+        <div class="container py-5">
+            <!-- Header -->
+            <div class="row mb-5">
+                <div class="col-12 text-center">
+                    <h1 class="fw-bold mb-3">Ebook Gratis</h1>
+                    <p class="text-muted fs-5">Kumpulan ebook edukasi gratis untuk semua kalangan</p>
+                </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="row mb-5">
+                <div class="col-lg-6 mx-auto">
+                    <form action="/ebooks" method="GET" class="d-flex">
+                        <input type="text" name="search" class="form-control me-2" 
+                               placeholder="Cari ebook..." 
+                               value="<%= typeof search !== 'undefined' ? search : '' %>">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Categories -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h4 class="fw-bold mb-3">Kategori Ebook</h4>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="/ebooks" class="btn btn-outline-primary">Semua</a>
+                        <a href="/ebooks/category/1" class="btn btn-outline-primary">Teknologi</a>
+                        <a href="/ebooks/category/2" class="btn btn-outline-primary">Pendidikan</a>
+                        <a href="/ebooks/category/3" class="btn btn-outline-primary">Bisnis</a>
+                        <a href="/ebooks/category/4" class="btn btn-outline-primary">Kesehatan</a>
+                        <a href="/ebooks/category/5" class="btn btn-outline-primary">Seni & Budaya</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ebooks Grid -->
+            <div class="row">
+                <% if (ebooks && ebooks.length > 0) { %>
+                    <% ebooks.forEach(ebook => { %>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="card h-100 shadow-sm ebook-card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                             style="width: 50px; height: 50px;">
+                                            <i class="fas fa-file-pdf text-white fa-lg"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="card-title fw-bold mb-1">
+                                                <a href="/ebooks/<%= ebook.slug %>" class="text-decoration-none text-dark">
+                                                    <%= ebook.title %>
+                                                </a>
+                                            </h5>
+                                            <small class="text-muted">
+                                                <i class="fas fa-download me-1"></i>
+                                                <%= ebook.download_count || 0 %> kali diunduh
+                                            </small>
+                                        </div>
+                                    </div>
+                                    
+                                    <p class="card-text text-muted">
+                                        <%= ebook.description ? ebook.description.substring(0, 120) + '...' : 'Deskripsi tidak tersedia' %>
+                                    </p>
+                                    
+                                    <!-- Author Info -->
+                                    <div class="d-flex align-items-center mb-3">
+                                        <% if (ebook.author_avatar) { %>
+                                            <img src="<%= ebook.author_avatar %>" 
+                                                 alt="<%= ebook.author_name %>" 
+                                                 class="rounded-circle me-2" 
+                                                 style="width: 30px; height: 30px; object-fit: cover;">
+                                        <% } else { %>
+                                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-2" 
+                                                 style="width: 30px; height: 30px;">
+                                                <i class="fas fa-user text-white"></i>
+                                            </div>
+                                        <% } %>
+                                        <div>
+                                            <div class="fw-bold small"><%= ebook.author_name %></div>
+                                            <small class="text-muted">
+                                                <%= new Date(ebook.created_at).toLocaleDateString('id-ID') %>
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                    <!-- Category & Download -->
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <% if (ebook.category_name) { %>
+                                            <span class="badge bg-primary"><%= ebook.category_name %></span>
+                                        <% } %>
+                                        <a href="/ebooks/<%= ebook.id %>/download" class="btn btn-success btn-sm">
+                                            <i class="fas fa-download me-2"></i>Download Gratis
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="col-12 text-center py-5">
+                        <i class="fas fa-file-pdf fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Belum ada ebook</h5>
+                        <p class="text-muted">Ebook akan muncul di sini</p>
+                    </div>
+                <% } %>
+            </div>
+
+            <!-- Pagination -->
+            <% if (totalPages > 1) { %>
+                <nav aria-label="Ebooks pagination" class="mt-5">
+                    <ul class="pagination justify-content-center">
+                        <% if (hasPrevPage) { %>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<%= currentPage - 1 %><%= typeof search !== 'undefined' ? '&search=' + search : '' %>">Previous</a>
+                            </li>
+                        <% } %>
+                        
+                        <% for (let i = 1; i <= totalPages; i++) { %>
+                            <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                <a class="page-link" href="?page=<%= i %><%= typeof search !== 'undefined' ? '&search=' + search : '' %>"><%= i %></a>
+                            </li>
+                        <% } %>
+                        
+                        <% if (hasNextPage) { %>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<%= currentPage + 1 %><%= typeof search !== 'undefined' ? '&search=' + search : '' %>">Next</a>
+                            </li>
+                        <% } %>
+                    </ul>
+                </nav>
+            <% } %>
+        </div>
+    

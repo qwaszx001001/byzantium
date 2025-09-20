@@ -7,8 +7,8 @@ const getAllEbooks = async (req, res) => {
         const limit = 12;
         const offset = (page - 1) * limit;
         
-        const ebooks = await Ebook.getAllPublished(limit, offset);
-        const totalEbooks = await Ebook.countPublished();
+        const ebooks = await Ebook.getAll(limit, offset, false); // Don't include drafts for public
+        const totalEbooks = await Ebook.count(false); // Don't include drafts for public
         const totalPages = Math.ceil(totalEbooks / limit);
         
         res.render('ebooks/index', {
@@ -48,7 +48,7 @@ const getEbookBySlug = async (req, res) => {
         }
         
         // Increment view count
-        await Ebook.incrementViewCount(ebook.id);
+        await Ebook.incrementDownloadCount(ebook.id);
         
         res.render('ebooks/detail', {
             title: `${ebook.title} - ByzantiumEdu`,

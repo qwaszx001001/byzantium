@@ -6,6 +6,7 @@ const getAllPosts = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = 12;
         const offset = (page - 1) * limit;
+        const query = req.query.q || ''; // Add this line to get the query parameter
         
         const posts = await Post.getAllPublished(limit, offset);
         const totalPosts = await Post.countPublished();
@@ -18,6 +19,7 @@ const getAllPosts = async (req, res) => {
             totalPages,
             hasNextPage: page < totalPages,
             hasPrevPage: page > 1,
+            query: query, // Add this line to pass query to the view
             user: req.session.user
         });
     } catch (error) {
@@ -29,6 +31,7 @@ const getAllPosts = async (req, res) => {
             totalPages: 1,
             hasNextPage: false,
             hasPrevPage: false,
+            query: req.query.q || '', // Add this line to pass query to the view
             user: req.session.user
         });
     }
@@ -47,8 +50,8 @@ const getPostBySlug = async (req, res) => {
             });
         }
         
-        // Get related posts
-        const relatedPosts = await Post.getRelatedPosts(post.category_id, post.id, 3);
+        // Get related posts (using getByCategory as a substitute)
+        const relatedPosts = await Post.getByCategory(post.category_name || 'Umum', 3);
         
         res.render('posts/detail', {
             title: `${post.title} - ByzantiumEdu`,

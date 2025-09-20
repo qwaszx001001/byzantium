@@ -1,117 +1,353 @@
 <%- include('../layouts/main', { title: title, user: user }) %>
 
+<div class="container">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+        <a href="/">Home</a> / <a href="/courses">Course</a> / <%= course.title %>
+    </nav>
 
-        <div class="container py-5">
-    <div class="row">
-        <!-- Course Content -->
-        <div class="col-lg-8">
-            <div class="card shadow-sm mb-4">
-                <% if (course.thumbnail) { %>
-                    <img src="<%= course.thumbnail %>" class="card-img-top" alt="<%= course.title %>" style="height: 300px; object-fit: cover;">
-                <% } else { %>
-                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 300px;">
-                        <i class="fas fa-book fa-4x text-muted"></i>
-                    </div>
-                <% } %>
-                <div class="card-body">
-                    <h1 class="card-title fw-bold mb-3"><%= course.title %></h1>
-                    <p class="card-text text-muted mb-4"><%= course.description %></p>
-                    
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="fas fa-user text-primary me-2"></i>
-                                <span class="text-muted">Instruktur: <strong><%= course.instructor_name %></strong></span>
-                            </div>
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="fas fa-tag text-primary me-2"></i>
-                                <span class="text-muted">Kategori: <strong><%= course.category_name || 'Umum' %></strong></span>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="fas fa-calendar text-primary me-2"></i>
-                                <span class="text-muted">Dibuat: <strong><%= new Date(course.created_at).toLocaleDateString('id-ID') %></strong></span>
-                            </div>
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="fas fa-clock text-primary me-2"></i>
-                                <span class="text-muted">Terakhir diperbarui: <strong><%= new Date(course.updated_at).toLocaleDateString('id-ID') %></strong></span>
-                            </div>
-                        </div>
-                    </div>
+    <!-- Main Layout -->
+    <div class="course-layout">
+        <!-- Left Column -->
+        <div class="course-content">
+            <h1 class="course-title"><%= course.title %></h1>
+            <span class="course-tag"><%= course.category_name || 'Basic Programming' %></span>
 
-                    <div class="mb-4">
-                        <h5 class="fw-bold mb-3">Deskripsi Kursus</h5>
-                        <div class="content-area">
-                            <%- course.content %>
-                        </div>
+            <!-- Overview Section -->
+            <section>
+                <h2 class="section-title">Overview</h2>
+                <p class="overview-text"><%= course.description %></p>
+                <div class="content-area"><%- course.content %></div>
+            </section>
+
+            <!-- Instructor Info -->
+            <section class="instructor-section">
+                <h2 class="section-title">Instructor</h2>
+                <div class="instructor-info">
+                    <div class="instructor-avatar"><%= course.instructor_name ? course.instructor_name[0] : 'I' %></div>
+                    <div class="instructor-details">
+                        <h4><%= course.instructor_name %></h4>
+                        <span>Course Instructor</span>
                     </div>
                 </div>
-            </div>
+            </section>
+
+            <!-- Course Info -->
+            <section class="course-info-section">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <i class="fas fa-calendar"></i>
+                        <span>Created: <%= new Date(course.created_at).toLocaleDateString('id-ID') %></span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Updated: <%= new Date(course.updated_at).toLocaleDateString('id-ID') %></span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-tag"></i>
+                        <span>Category: <%= course.category_name || 'General' %></span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-book"></i>
+                        <span>Type: <%= course.is_free ? 'Free' : 'Premium' %></span>
+                    </div>
+                </div>
+            </section>
         </div>
 
-        <!-- Sidebar -->
-        <div class="col-lg-4">
-            <div class="card shadow-sm mb-4">
-                <div class="card-body">
-                    <h5 class="fw-bold mb-3">Informasi Kursus</h5>
-                    
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="text-muted">Status:</span>
-                        <% if (course.is_published) { %>
-                            <span class="badge bg-success">Diterbitkan</span>
-                        <% } else { %>
-                            <span class="badge bg-warning">Draft</span>
+        <!-- Right Sidebar -->
+        <div class="course-sidebar">
+            <div class="course-card">
+                <div class="course-image">
+                    <% if (course.thumbnail) { %>
+                        <img src="<%= course.thumbnail %>" alt="<%= course.title %>">
+                    <% } else { %>
+                        <div class="placeholder-image">
+                            <i class="fas fa-book fa-3x"></i>
+                        </div>
+                    <% } %>
+                </div>
+                <div class="course-info">
+                    <% if (!course.is_free) { %>
+                        <div class="course-price">Rp <%= course.price || '0' %></div>
+                        <% if (course.original_price) { %>
+                            <div class="original-price">Rp <%= course.original_price %></div>
                         <% } %>
-                    </div>
-                    
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="text-muted">Tipe:</span>
-                        <% if (course.is_free) { %>
-                            <span class="badge bg-success">Gratis</span>
-                        <% } else { %>
-                            <span class="badge bg-warning">Berbayar</span>
-                        <% } %>
-                    </div>
+                    <% } else { %>
+                        <div class="course-price">Free Course</div>
+                    <% } %>
 
                     <% if (isAuthenticated) { %>
-                        <div class="mt-4" id="enrollment-section">
+                        <div id="enrollment-section">
                             <% if (isEnrolled) { %>
-                                <div class="alert alert-success mb-3">
-                                    <i class="fas fa-check-circle me-2"></i>Anda sudah terdaftar di kursus ini!
+                                <div class="alert-success">
+                                    <i class="fas fa-check-circle"></i>
+                                    You are enrolled in this course!
                                 </div>
-                                <a href="/enrollment/learn/<%= course.id %>" class="btn btn-success w-100">
-                                    <i class="fas fa-play me-2"></i>Lanjutkan Belajar
+                                <a href="/enrollment/learn/<%= course.id %>" class="continue-button">
+                                    <i class="fas fa-play"></i> Continue Learning
                                 </a>
                             <% } else { %>
-                                <button type="button" class="btn btn-primary w-100 enroll-btn" onclick="enrollCourse(<%= course.id %>)">
-                                    <i class="fas fa-play me-2"></i>Daftar Kursus
+                                <button type="button" class="enroll-button" onclick="enrollCourse(<%= course.id %>)">
+                                    <i class="fas fa-graduation-cap"></i> Enroll Now
                                 </button>
                             <% } %>
                         </div>
                     <% } else { %>
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle me-2"></i>
-                            Silakan <a href="/auth/login" class="alert-link">login</a> untuk mendaftar ke kursus ini.
+                        <div class="login-prompt">
+                            <i class="fas fa-info-circle"></i>
+                            Please <a href="/auth/login">login</a> to enroll in this course.
                         </div>
                     <% } %>
-                </div>
-            </div>
 
-            <!-- Related Courses -->
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="fw-bold mb-3">Kursus Terkait</h5>
-                    <p class="text-muted small">Kursus lain yang mungkin menarik untuk Anda</p>
-                    <!-- Related courses will be loaded here -->
-                    <div class="text-center py-3">
-                        <i class="fas fa-spinner fa-spin text-muted"></i>
-                        <p class="text-muted small mt-2">Memuat kursus terkait...</p>
+                    <div class="course-includes">
+                        <h4>Course Includes</h4>
+                        <div class="include-item">
+                            <div class="include-icon">📹</div>
+                            <span>Full Video Lessons</span>
+                        </div>
+                        <div class="include-item">
+                            <div class="include-icon">⏰</div>
+                            <span>Lifetime Access</span>
+                        </div>
+                        <div class="include-item">
+                            <div class="include-icon">📄</div>
+                            <span>Course Materials</span>
+                        </div>
+                        <div class="include-item">
+                            <div class="include-icon">🏆</div>
+                            <span>Certificate of Completion</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        </div>
     </div>
 </div>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+        line-height: 1.6;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    /* Navigation */
+    .breadcrumb {
+        padding: 20px 0;
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    .breadcrumb a {
+        color: #6c757d;
+        text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+        color: #495057;
+    }
+
+    /* Main Layout */
+    .course-layout {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 40px;
+        margin-bottom: 40px;
+    }
+
+    /* Left Column */
+    .course-content {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .course-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 20px;
+    }
+
+    .course-tag {
+        display: inline-block;
+        background: #e8f4f8;
+        color: #2980b9;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-bottom: 30px;
+    }
+
+    /* Course Card */
+    .course-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .course-image {
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(135deg, #2c5530, #1e3a21);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .course-image img {
+        max-width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .placeholder-image {
+        color: rgba(255, 255, 255, 0.8);
+        text-align: center;
+    }
+
+    .course-info {
+        padding: 25px;
+    }
+
+    .course-price {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #2c5530;
+        margin-bottom: 5px;
+    }
+
+    .original-price {
+        color: #6c757d;
+        text-decoration: line-through;
+        font-size: 1rem;
+        margin-bottom: 20px;
+    }
+
+    .enroll-button, .continue-button {
+        width: 100%;
+        background: linear-gradient(135deg, #2c5530, #1e3a21);
+        color: white;
+        border: none;
+        padding: 15px 20px;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .enroll-button:hover, .continue-button:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+    }
+
+    .alert-success {
+        background: #d4edda;
+        color: #155724;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+
+    .login-prompt {
+        background: #cce5ff;
+        color: #004085;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+
+    .login-prompt a {
+        color: #004085;
+        font-weight: 600;
+    }
+
+    .course-includes {
+        margin-top: 20px;
+    }
+
+    .course-includes h4 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 15px;
+    }
+
+    .include-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 0;
+        color: #555;
+    }
+
+    .include-icon {
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .course-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .course-title {
+            font-size: 1.5rem;
+        }
+
+        .course-content {
+            padding: 20px;
+        }
+    }
+</style>
+
+<script>
+    function enrollCourse(courseId) {
+        if (confirm('Are you sure you want to enroll in this course?')) {
+            fetch(`/enrollment/enroll/${courseId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert(data.message || 'Failed to enroll in the course');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while enrolling in the course');
+            });
+        }
+    }
+</script>
     

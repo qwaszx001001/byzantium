@@ -168,17 +168,18 @@ class Post {
         }
     }
 
-    static async getByCategory(categoryId, limit = 10) {
+    static async getByCategory(categoryName, limit = 10) {
         try {
             const [rows] = await db.execute(`
                 SELECT p.*, cat.name as category_name, u.full_name as author_name 
                 FROM posts p 
                 LEFT JOIN categories cat ON p.category_id = cat.id 
                 LEFT JOIN users u ON p.author_id = u.id 
-                WHERE p.status = 'published' AND p.category_id = ?
+                WHERE p.status = 'published' 
+                AND cat.name = ?
                 ORDER BY p.created_at DESC 
                 LIMIT ?
-            `, [categoryId, limit]);
+            `, [categoryName, limit]);
             return rows;
         } catch (error) {
             throw error;

@@ -131,6 +131,15 @@ class Enrollment {
             throw error;
         }
     }
+
+    static async countAll() {
+        try {
+            const [rows] = await db.execute('SELECT COUNT(*) as count FROM user_course_enrollments');
+            return rows[0].count;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = Enrollment; 

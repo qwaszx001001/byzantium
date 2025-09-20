@@ -15,6 +15,9 @@ router.get('/', async (req, res) => {
         const courses = await Course.getAllPublished(limit, offset);
         const totalCourses = await Course.countPublished();
         const totalPages = Math.ceil(totalCourses / limit);
+
+        // Get total enrollments
+        const totalEnrollments = await Enrollment.countAll();
         
         res.render('courses/index', {
             title: 'Semua Kursus - ByzantiumEdu',
@@ -22,7 +25,9 @@ router.get('/', async (req, res) => {
             currentPage: page,
             totalPages,
             hasNextPage: page < totalPages,
-            hasPrevPage: page > 1
+            hasPrevPage: page > 1,
+            totalCourses: totalEnrollments, // Use total enrollments for the counter
+            user: req.session.user
         });
     } catch (error) {
         console.error('Courses page error:', error);
@@ -32,7 +37,9 @@ router.get('/', async (req, res) => {
             currentPage: 1,
             totalPages: 1,
             hasNextPage: false,
-            hasPrevPage: false
+            hasPrevPage: false,
+            totalCourses: 0,
+            user: req.session.user
         });
     }
 });

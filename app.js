@@ -72,6 +72,7 @@ const adminRoutes = require('./routes/admin');
 const homeRoutes = require('./routes/home');
 const enrollmentRoutes = require('./routes/enrollment');
 const ebookRoutes = require('./routes/ebooks');
+const byzanpediaRoutes = require('./routes/byzanpedia');
 
 app.use('/', homeRoutes);
 app.use('/auth', authRoutes);
@@ -81,6 +82,7 @@ app.use('/pedia', pediaRoutes);
 app.use('/admin', adminRoutes);
 app.use('/enrollment', enrollmentRoutes);
 app.use('/ebooks', ebookRoutes);
+app.use('/byzanpedia', byzanpediaRoutes);
 
 // 404 handler
 app.use((req, res) => {

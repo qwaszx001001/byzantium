@@ -1,0 +1,528 @@
+<%- include('../layouts/main') %>
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="floating-elements">
+        <div class="floating-book" style="--rotation: 15deg;"></div>
+        <div class="floating-book" style="--rotation: -10deg;"></div>
+        <div class="floating-book" style="--rotation: 25deg;"></div>
+        <div class="floating-book" style="--rotation: -20deg;"></div>
+        <div class="floating-book" style="--rotation: 8deg;"></div>
+    </div>
+    
+    <div class="main-card">
+        <h1 class="logo-title">Byzan Pedia</h1>
+        <h2 class="logo-subtitle">Publisher</h2>
+        <div class="highlight-text">PENERBIT BUKU</div>
+        <p class="byline">By Byzanedu.com</p>
+        <a href="#main-content" class="cta-button">Cek Sekarang »</a>
+    </div>
+</section>
+<div class="footer-bar">
+    بِزِيَادَةِ عُلُوْمِنَا لِخِدْمَةِ الْأُمَّةِ
+    <div class="footer-sub">
+        Dengan bertambahnya ilmu pengetahuan kita, untuk mengabdi kepada ummat
+    </div>
+</div>
+<!-- Main Content -->
+<div id="main-content" class="main-content">
+    <div class="container">
+        <!-- Main Card -->
+        <div class="main-card">
+            <div class="logo">ByzanPedia</div>
+            <div class="description">
+                adalah penerbit buku yang dikelola oleh <span class="highlight-text">Byzanedu</span>. Fitur ini berfungsi sebagai ruang dokumentasi dan publikasi karya tulis, baik berupa buku ilmu pengetahuan, novel, buku panduan, ensiklopedia, dan lain sebagainya.
+                <br><br>
+                <span class="highlight-text">Anda dapat mengirimkan naskah siap cetak</span> untuk di publikasikan secara profesional dan legal. Jika Anda memiliki naskah yang belum sepenuhnya siap, tim Byzanedu juga dapat membantu dalam proses penulisan ulang, penyusunan layout, hingga pembuatan desain sampul.
+                <br><br>
+                Inisiatif ini merupakan bagian dari komitmen kami untuk mengembangkan budaya literasi baca-tulis melalui karya-karya yang diterbitkan.
+            </div>
+            <button class="upload-btn">Upload Sekarang »</button>
+        </div>
+
+        <!-- Sample Books Section -->
+        <div class="sample-books">
+            <h2 class="sample-title">SAMPLE BOOKS BY BYZAN PEDIA</h2>
+            <div class="books-grid">
+                <!-- Book 1 -->
+                <div class="book-item">
+                    <img src="/assets/layer_11.png" 
+                         alt="Qomus Saku" 
+                         class="book-image">
+                    <div class="book-info">
+                        <div class="book-title">QOMUS SAKU</div>
+                        <div class="book-subtitle">🏠 Byzanpedia</div>
+                    </div>
+                </div>
+                
+                <!-- Book 2 -->
+                <div class="book-item">
+                    <img src="/assets/layer_10.png" 
+                         alt="Coming Soon Book 1" 
+                         class="book-image">
+                    <div class="book-info">
+                        <div class="book-title">COMING SOON</div>
+                        <div class="book-subtitle">🏠 Byzanpedia</div>
+                    </div>
+                </div>
+                
+                <!-- Book 3 -->
+                <div class="book-item">
+                    <img src="/assets/layer_10.png" 
+                         alt="Coming Soon Book 2" 
+                         class="book-image">
+                    <div class="book-info">
+                        <div class="book-title">COMING SOON</div>
+                        <div class="book-subtitle">🏠 Byzanpedia</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add the CSS to the page -->
+<style>
+    /* Common Card Styles */
+    .main-card {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        padding: 40px;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .main-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Hero Section Styles */
+    .hero-section {
+        position: relative;
+        height: 100vh;
+        top: 0px;
+      
+        background: linear-gradient(
+            rgba(0, 0, 0, 0.4),
+            rgba(0, 0, 0, 0.3),
+            rgba(0, 0, 0, 0.5)
+        ), url('/assets/image_2.png') center/cover;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(
+            ellipse at center,
+            rgba(0, 0, 0, 0.1) 0%,
+            rgba(0, 0, 0, 0.3) 50%,
+            rgba(0, 0, 0, 0.6) 100%
+        );
+        z-index: 1;
+    }
+
+    .hero-section .main-card {
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(25px);
+        border-radius: 30px;
+        padding: 60px 50px;
+        text-align: center;
+        max-width: 520px;
+        width: 90%;
+        animation: fadeInUp 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(40px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    /* Logo and Text Styles */
+    .logo-title, .logo {
+        font-family: 'Playfair Display', serif;
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: #ffffff;
+        margin-bottom: 5px;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .logo {
+        color: #038a3b;
+        font-size: 2.5em;
+    }
+
+    .logo-subtitle {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: #ffffff;
+        margin-bottom: 25px;
+        font-style: italic;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        letter-spacing: -1px;
+    }
+
+    /* Button Styles */
+    .cta-button, .upload-btn {
+        background: rgba(255, 255, 255, 0.12);
+        color: white;
+        padding: 18px 40px;
+        border-radius: 50px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        border: 2px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .upload-btn {
+        background: linear-gradient(45deg, #01a332, #10a549);
+        border: none;
+        padding: 12px 25px;
+        box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);
+    }
+
+    .cta-button:hover, .upload-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(4, 168, 45, 0.4);
+    }
+
+    /* Main Content Section */
+    .main-content {
+        background: url('/assets/background_home.jpeg') center/cover no-repeat;
+        min-height: 100vh;
+        position: relative;
+    }
+
+    .main-content::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.4);
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 50px 20px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Description Styles */
+    .description {
+        color: white;
+        line-height: 1.8;
+        font-size: 1.1em;
+        margin-bottom: 30px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    .highlight-text {
+        color: #058822;
+        font-weight: bold;
+    }
+
+    /* Books Section */
+    .sample-books {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .sample-title {
+        color: white;
+        font-size: 2em;
+        font-weight: bold;
+        margin-bottom: 40px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        letter-spacing: 2px;
+    }
+
+    .books-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 40px;
+        margin-bottom: 50px;
+        padding-top: 40px;
+    }
+
+    .book-item {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(15px);
+        border-radius: 15px;
+        padding: 20px 20px 30px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        position: relative;
+        margin-top: 40px;
+        overflow: visible;
+    }
+
+    .book-image {
+        width: auto;
+        height: auto;
+        max-width: 300px;
+        max-height: 300px;
+        border-radius: 12px;
+        margin: 0 auto 20px;
+        object-fit: cover;
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 2;
+        transform: translateY(-50px);
+    }
+
+    .book-image:hover {
+        transform: translateY(-55px) scale(1.05);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .book-title {
+        color: white;
+        font-size: 1.3em;
+        font-weight: bold;
+        margin-bottom: 10px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        margin-top: -30px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .book-subtitle {
+        color: #04a033;
+        font-size: 0.9em;
+        font-weight: 500;
+    }
+
+    
+
+    /* Floating Elements */
+    .floating-elements {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 3;
+    }
+
+    .floating-book {
+        position: absolute;
+        width: 15px;
+        height: 25px;
+        background: linear-gradient(45deg, #D2691E, #CD853F, #F4A460);
+        border-radius: 2px;
+        opacity: 0.4;
+        animation: float 8s ease-in-out infinite;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .floating-book:nth-child(1) { top: 15%; left: 8%; animation-delay: 0s; transform: rotate(15deg); }
+    .floating-book:nth-child(2) { top: 65%; right: 12%; animation-delay: 3s; transform: rotate(-10deg); }
+    .floating-book:nth-child(3) { top: 85%; left: 15%; animation-delay: 6s; transform: rotate(25deg); }
+    .floating-book:nth-child(4) { top: 25%; right: 20%; animation-delay: 1.5s; transform: rotate(-20deg); }
+    .floating-book:nth-child(5) { top: 45%; left: 5%; animation-delay: 4.5s; transform: rotate(8deg); }
+
+
+    /* Footer Bar */
+.footer-bar {
+    background: linear-gradient(135deg, #1a5d1a, #0d4a0d, #2e7d2e, #1a5d1a);
+    top: -10px;
+    text-align: center;
+    padding: 1.1rem 0 0.5rem 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+.footer-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 50%);
+    opacity: 0.5;
+    z-index: 0;
+}
+.footer-sub {
+    color: #e0ffe0;
+    font-size: 0.98rem;
+    font-style: italic;
+    margin-top: 0.2rem;
+    margin-bottom: 0.5rem;
+}
+    @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(var(--rotation, 0deg)); }
+        25% { transform: translateY(-15px) rotate(calc(var(--rotation, 0deg) + 5deg)); }
+        50% { transform: translateY(-30px) rotate(var(--rotation, 0deg)); }
+        75% { transform: translateY(-15px) rotate(calc(var(--rotation, 0deg) - 5deg)); }
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+        .logo-title, .logo {
+            font-size: 2.8rem;
+        }
+        
+        .logo-subtitle {
+            font-size: 2rem;
+        }
+        
+        .main-card {
+            padding: 30px 20px;
+            margin: 20px;
+            max-width: 90%;
+        }
+        
+        .footer-section {
+            padding: 40px 0;
+        }
+        
+        .footer-content {
+            grid-template-columns: 1fr;
+            gap: 40px;
+            text-align: center;
+            padding: 0 30px;
+        }
+
+        .footer-left {
+            justify-content: center;
+        }
+
+        .footer-right {
+            text-align: center;
+        }
+
+        .description-text {
+            text-align: center;
+            margin: 0 auto 20px;
+        }
+
+        .closing-text {
+            text-align: center;
+        }
+
+        .social-links {
+            justify-content: center;
+        }
+
+        .main-title {
+            font-size: 1.8em;
+        }
+
+        .sample-title {
+            font-size: 1.5em;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .logo-title {
+            font-size: 2.3rem;
+        }
+        
+        .logo-subtitle {
+            font-size: 1.6rem;
+        }
+
+        .main-card {
+            padding: 40px 25px;
+            border-radius: 25px;
+        }
+
+        .highlight-text {
+            font-size: 0.85rem;
+            padding: 12px 24px;
+        }
+    }
+</style>
+
+<!-- Add the JavaScript to the page -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add hover effects to cards
+        const cards = document.querySelectorAll('.book-item, .main-card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Upload button click effect
+        const uploadBtn = document.querySelector('.upload-btn');
+        uploadBtn.addEventListener('click', function() {
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 150);
+            alert('Fitur upload akan segera hadir!');
+        });
+
+        // Enhanced parallax effect for floating books
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const floatingBooks = document.querySelectorAll('.floating-book');
+            
+            floatingBooks.forEach((book, index) => {
+                const speed = 0.3 + (index * 0.1);
+                const rotation = scrolled * 0.05 + (index * 15);
+                book.style.transform = `translateY(${scrolled * speed}px) rotate(${rotation}deg)`;
+            });
+        });
+
+        // Add shimmer effect to hero card on load
+        const mainCard = document.querySelector('.hero-section .main-card');
+        setTimeout(() => {
+            mainCard.style.background = 'rgba(255, 255, 255, 0.12)';
+            setTimeout(() => {
+                mainCard.style.background = 'rgba(255, 255, 255, 0.08)';
+            }, 500);
+        }, 1000);
+    });
+</script> 
+<%- include('../layouts/footer') %>

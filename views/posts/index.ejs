@@ -1,133 +1,164 @@
 <%- include('../layouts/main', { title: title, user: user }) %>
 
-
-        <div class="container py-5">
-            <!-- Header -->
-            <div class="row mb-5">
-                <div class="col-12 text-center">
-                    <h1 class="fw-bold mb-3">Gallery Kegiatan</h1>
-                    <p class="text-muted lead">Dokumentasi kegiatan mengajar, workshop, dan aktivitas pendidikan</p>
+        <div class="container-fluid px-2 px-md-0">
+            <div class="byz-gallery-container py-5" style="background: linear-gradient(90deg, #2c5530 0%, #1e3a21 100%); position: relative; overflow: hidden; border-radius: 0px;">
+                <!-- Decorative Elements -->
+                <div class="byz-decorative-circle" style="position: absolute; width: 300px; height: 300px; border-radius: 50%; background: rgba(255,255,255,0.03); top: -100px; right: -100px;"></div>
+                <div class="byz-decorative-circle" style="position: absolute; width: 200px; height: 200px; border-radius: 50%; background: rgba(255,255,255,0.02); bottom: -50px; left: -50px;"></div>
+                
+                <!-- Header -->
+                <div class="row mb-4">
+                    <div class="col-12 text-center">
+                        <h1 class="byz-gallery-title fw-bold mb-2 text-white" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">Gallery Kegiatan</h1>
+                        <p class="byz-gallery-subtitle text-light lead" style="opacity: 0.9; font-size: 1rem;">Dokumentasi kegiatan mengajar, workshop, dan aktivitas pendidikan</p>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Search Bar -->
-            <div class="row mb-4">
-                <div class="col-md-8 mx-auto">
-                    <form method="GET" class="d-flex">
-                        <input type="text" class="form-control me-2" name="q" placeholder="Cari kegiatan..." value="<%= query %>">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </form>
+                <!-- Search Bar -->
+                <div class="row mb-4">
+                    <div class="col-md-6 mx-auto">
+                        <form method="GET" class="byz-gallery-search d-flex" style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; backdrop-filter: blur(10px);">
+                            <input type="text" class="form-control form-control-sm me-2" name="q" placeholder="Cari kegiatan..." value="<%= query %>" style="border: none; background: rgba(255,255,255,0.9);">
+                            <button type="submit" class="byz-btn-search btn btn-sm btn-light" style="transition: all 0.3s ease;">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </form>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Activities Grid -->
-            <% if (posts && posts.length > 0) { %>
-                <div class="row g-4">
-                    <% posts.forEach(post => { %>
-                        <div class="col-lg-4 col-md-6">
-                            <div class="card h-100 shadow-sm activity-card">
-                                <!-- Featured Image -->
-                                <% if (post.featured_image) { %>
-                                    <div class="activity-image-container">
-                                        <img src="<%= post.featured_image %>" class="card-img-top" alt="<%= post.title %>" style="height: 200px; object-fit: cover;">
-                                        <div class="activity-overlay">
-                                            <a href="/posts/<%= post.slug %>" class="btn btn-light btn-sm">
-                                                <i class="fas fa-eye me-1"></i>Lihat Detail
-                                            </a>
-                                        </div>
-                                    </div>
-                                <% } else { %>
-                                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                                        <i class="fas fa-calendar-alt fa-3x text-muted"></i>
-                                    </div>
-                                <% } %>
-                                
-                                <div class="card-body">
-                                    <h5 class="card-title fw-bold mb-2">
-                                        <a href="/posts/<%= post.slug %>" class="text-decoration-none text-dark">
-                                            <%= post.title %>
-                                        </a>
-                                    </h5>
-                                    
-                                    <% if (post.excerpt) { %>
-                                        <p class="card-text text-muted mb-3">
-                                            <%= post.excerpt.length > 100 ? post.excerpt.substring(0, 100) + '...' : post.excerpt %>
-                                        </p>
-                                    <% } %>
-                                    
-                                    <div class="activity-meta">
-                                        <div class="row text-muted small">
-                                            <div class="col-6">
-                                                <i class="fas fa-calendar me-1"></i>
-                                                <% if (post.activity_date) { %>
-                                                    <%= new Date(post.activity_date).toLocaleDateString('id-ID') %>
-                                                <% } else { %>
-                                                    -
-                                                <% } %>
+                <!-- Activities Grid -->
+                <div class="px-2 px-md-4">
+                    <% if (posts && posts.length > 0) { %>
+                        <div class="row g-3">
+                            <% posts.forEach(post => { %>
+                                <div class="col-lg-3 col-md-4 col-sm-6">
+                                    <div class="byz-activity-card card h-100" style="border: none; border-radius: 8px; overflow: hidden; transition: all 0.3s ease; transform: translateY(0); box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                                        <!-- Featured Image -->
+                                        <% if (post.featured_image) { %>
+                                            <div class="byz-activity-image-container position-relative" style="overflow: hidden;">
+                                                <img src="<%= post.featured_image %>" class="card-img-top" alt="<%= post.title %>" style="height: 160px; object-fit: cover; transition: all 0.5s ease;">
+                                                <div class="byz-activity-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(44,85,48,0.2), rgba(30,58,33,0.8)); opacity: 0; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center;">
+                                                    <a href="/posts/<%= post.slug %>" class="byz-btn-view btn btn-light btn-sm" style="transform: translateY(20px); transition: all 0.3s ease; font-size: 0.8rem;">
+                                                        <i class="fas fa-eye me-1"></i>Detail
+                                                    </a>
+                                                </div>
                                             </div>
-                                            <div class="col-6">
-                                                <i class="fas fa-tag me-1"></i>
-                                                <%= post.category_name || 'Umum' %>
+                                        <% } else { %>
+                                            <div class="byz-activity-placeholder card-img-top d-flex align-items-center justify-content-center" style="height: 160px; background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));">
+                                                <i class="fas fa-calendar-alt fa-2x" style="color: rgba(255,255,255,0.3);"></i>
+                                            </div>
+                                        <% } %>
+                                        
+                                        <div class="card-body p-2" style="background: white;">
+                                            <h6 class="byz-activity-title card-title fw-bold mb-2" style="font-size: 0.9rem;">
+                                                <a href="/posts/<%= post.slug %>" class="text-decoration-none" style="color: #2c5530; transition: color 0.3s ease;">
+                                                    <%= post.title %>
+                                                </a>
+                                            </h6>
+                                            
+                                            <% if (post.excerpt) { %>
+                                                <p class="byz-activity-excerpt card-text mb-2" style="color: #666; font-size: 0.8rem;">
+                                                    <%= post.excerpt.length > 60 ? post.excerpt.substring(0, 60) + '...' : post.excerpt %>
+                                                </p>
+                                            <% } %>
+                                            
+                                            <div class="byz-activity-meta" style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 8px; margin-top: 8px;">
+                                                <div class="row g-2" style="color: #888; font-size: 0.75rem;">
+                                                    <div class="col-6">
+                                                        <i class="fas fa-calendar me-1" style="color: #2c5530;"></i>
+                                                        <% if (post.activity_date) { %>
+                                                            <%= new Date(post.activity_date).toLocaleDateString('id-ID') %>
+                                                        <% } else { %>
+                                                            -
+                                                        <% } %>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <i class="fas fa-tag me-1" style="color: #2c5530;"></i>
+                                                        <%= post.category_name || 'Umum' %>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         
-                                        <% if (post.location) { %>
-                                            <div class="mt-2 text-muted small">
-                                                <i class="fas fa-map-marker-alt me-1"></i>
-                                                <%= post.location %>
+                                        <div class="byz-activity-footer card-footer py-2 px-2" style="background: white; border-top: 1px solid rgba(0,0,0,0.05);">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <small style="color: #888; font-size: 0.75rem;">
+                                                    <i class="fas fa-eye me-1" style="color: #2c5530;"></i>
+                                                    <%= post.view_count || 0 %>
+                                                </small>
+                                                <a href="/posts/<%= post.slug %>" class="byz-btn-detail btn btn-sm" style="background: #2c5530; color: white; transition: all 0.3s ease; font-size: 0.75rem; padding: 2px 8px;">
+                                                    Detail
+                                                </a>
                                             </div>
-                                        <% } %>
+                                        </div>
                                     </div>
                                 </div>
-                                
-                                <div class="card-footer bg-transparent">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <small class="text-muted">
-                                            <i class="fas fa-eye me-1"></i>
-                                            <%= post.view_count || 0 %> dilihat
-                                        </small>
-                                        <a href="/posts/<%= post.slug %>" class="btn btn-outline-primary btn-sm">
-                                            Lihat Detail
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                            <% }); %>
                         </div>
-                    <% }); %>
-                </div>
 
-                <!-- Pagination -->
-                <% if (totalPages > 1) { %>
-                    <nav aria-label="Gallery pagination" class="mt-5">
-                        <ul class="pagination justify-content-center">
-                            <% if (hasPrevPage) { %>
-                                <li class="page-item">
-                                    <a class="page-link" href="?page=<%= currentPage - 1 %>&q=<%= query %>">Previous</a>
-                                </li>
-                            <% } %>
-                            
-                            <% for (let i = 1; i <= totalPages; i++) { %>
-                                <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                                    <a class="page-link" href="?page=<%= i %>&q=<%= query %>"><%= i %></a>
-                                </li>
-                            <% } %>
-                            
-                            <% if (hasNextPage) { %>
-                                <li class="page-item">
-                                    <a class="page-link" href="?page=<%= currentPage + 1 %>&q=<%= query %>">Next</a>
-                                </li>
-                            <% } %>
-                        </ul>
-                    </nav>
-                <% } %>
-            <% } else { %>
-                <div class="text-center py-5">
-                    <i class="fas fa-calendar-alt fa-3x text-muted mb-3"></i>
-                    <h5 class="text-muted">Belum ada kegiatan</h5>
-                    <p class="text-muted">Kegiatan akan ditampilkan di sini setelah ditambahkan.</p>
+                        <!-- Pagination -->
+                        <% if (totalPages > 1) { %>
+                            <nav aria-label="Gallery pagination" class="mt-4">
+                                <ul class="byz-gallery-pagination pagination pagination-sm justify-content-center">
+                                    <% if (hasPrevPage) { %>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page=<%= currentPage - 1 %>&q=<%= query %>" style="background: rgba(255,255,255,0.9); border: none; color: #2c5530; transition: all 0.3s ease;">Previous</a>
+                                        </li>
+                                    <% } %>
+                                    
+                                    <% for (let i = 1; i <= totalPages; i++) { %>
+                                        <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                            <a class="page-link" href="?page=<%= i %>&q=<%= query %>" style="background: <%= i === currentPage ? '#2c5530' : 'rgba(255,255,255,0.9)' %>; border: none; color: <%= i === currentPage ? 'white' : '#2c5530' %>; margin: 0 2px; transition: all 0.3s ease;"><%= i %></a>
+                                        </li>
+                                    <% } %>
+                                    
+                                    <% if (hasNextPage) { %>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page=<%= currentPage + 1 %>&q=<%= query %>" style="background: rgba(255,255,255,0.9); border: none; color: #2c5530; transition: all 0.3s ease;">Next</a>
+                                        </li>
+                                    <% } %>
+                                </ul>
+                            </nav>
+                        <% } %>
+                    <% } else { %>
+                        <div class="byz-gallery-empty text-center py-4" style="background: rgba(255,255,255,0.05); border-radius: 8px; backdrop-filter: blur(10px);">
+                            <i class="fas fa-calendar-alt fa-2x mb-2" style="color: rgba(255,255,255,0.5);"></i>
+                            <h6 class="text-white mb-1" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">Belum ada kegiatan</h6>
+                            <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Kegiatan akan ditampilkan di sini setelah ditambahkan.</p>
+                        </div>
+                    <% } %>
                 </div>
-            <% } %>
+            </div>
         </div>
+        <%- include('../layouts/footer') %>
+
+<style>
+.byz-activity-card:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important;
+}
+
+.byz-activity-card:hover .byz-activity-overlay {
+    opacity: 1 !important;
+}
+
+.byz-activity-card:hover .byz-activity-image-container img {
+    transform: scale(1.05);
+}
+
+.byz-activity-card:hover .byz-btn-view {
+    transform: translateY(0) !important;
+}
+
+.byz-btn-search:hover,
+.byz-btn-detail:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.page-link:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+</style>
     

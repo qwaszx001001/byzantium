@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS courses (
     description TEXT,
     content LONGTEXT,
     thumbnail VARCHAR(255),
-    video_url VARCHAR(255), -- URL video utama course
+    video_url VARCHAR(255) -- URL video utama course
     category_id INT,
     instructor_id INT,
     is_published BOOLEAN DEFAULT FALSE,
@@ -148,6 +148,19 @@ CREATE TABLE IF NOT EXISTS user_lesson_progress (
     FOREIGN KEY (lesson_id) REFERENCES course_lessons(id) ON DELETE CASCADE,
     UNIQUE KEY unique_progress (user_id, lesson_id)
 );
+
+-- Create enrollments table
+CREATE TABLE IF NOT EXISTS enrollments (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    course_id INT NOT NULL,
+    status ENUM('active', 'completed', 'dropped') DEFAULT 'active',
+    progress FLOAT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Insert default admin user
 INSERT INTO users (username, email, password, full_name, role) VALUES 

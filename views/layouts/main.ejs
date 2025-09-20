@@ -9,78 +9,254 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="/css/style.css" rel="stylesheet">
+    
+    <style>
+        /* Header Styles */
+        .header {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background-size: auto, 40px 40px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            padding: 0;
+          
+        }
+
+        .nav-container {
+            background: transparent;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 20px;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            color: #2c5530;
+            flex-shrink: 0;
+        }
+
+        .header-logo-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .header-logo-icon img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .header-logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+        }
+
+        .byzantium-bold {
+            font-weight: bold;
+            color: #2c5530;
+            font-size: 1.1em;
+        }
+
+        .edu-id {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 2px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9em;
+            text-align: center;
+        }
+
+        .nav-menu a span:first-child {
+            font-size: 1.4em;
+        }
+
+        .nav-menu a span:last-child {
+            font-size: 0.85em;
+        }
+
+        .nav-menu a:hover {
+            color: #2c5530;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .search-icon, .sign-in {
+            color: #666;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1em;
+        }
+
+        .sign-up {
+            background: #2c5530;
+            color: white !important;
+            padding: 8px 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+            font-size: 0.9em;
+            white-space: nowrap;
+        }
+
+        .sign-up:hover {
+            background: #1e3a21;
+        }
+
+        /* Mobile menu toggle */
+        .mobile-menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .mobile-menu-toggle span {
+            width: 25px;
+            height: 2px;
+            background-color: #333;
+            transition: 0.3s;
+        }
+
+        /* Add margin to main content to account for fixed header */
+        main {
+            margin-top: 90px;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: white;
+                padding: 20px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-menu.active {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .auth-buttons {
+                display: none;
+            }
+
+            .auth-buttons.active {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                gap: 10px;
+                padding: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="/">
-                <i class="fas fa-graduation-cap me-2"></i>ByzantiumEdu
-            </a>
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Beranda</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/courses">Kursus</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/posts">Gallery Kegiatan</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/pedia">Artikel Pedia</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/ebooks">Ebook Gratis</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/about">Tentang</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/contact">Kontak</a>
-                    </li>
-                </ul>
-                
-                <ul class="navbar-nav">
-                    <% if (isAuthenticated) { %>
-                        <% if (isAdmin) { %>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/admin">
-                                    <i class="fas fa-cog me-1"></i>Admin
-                                </a>
-                            </li>
-                        <% } %>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user me-1"></i><%= user.full_name %>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/profile">Profil</a></li>
-                                <li><a class="dropdown-item" href="/enrollment/my-courses">Kursus Saya</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="/auth/logout">Logout</a></li>
-                            </ul>
-                        </li>
-                    <% } else { %>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/auth/login">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/auth/register">Daftar</a>
-                        </li>
-                    <% } %>
-                </ul>
+    <header class="header">
+        <nav class="nav-container">
+            <div class="header-logo">
+                <div class="header-logo-icon">
+                    <img src="/assets/logo_byzantium.png" alt="Byzantium Logo">
+                </div>
+                <div class="header-logo-text">
+                    <span class="byzantium-bold">Byzan</span>
+                    <span class="edu-id">education</span>
+                </div>
             </div>
-        </div>
-    </nav>
+
+            <ul class="nav-menu">
+                <li><a href="/" title="Beranda"><span><i class="fa fa-home"></i></span><span>Home</span></a></li>
+                <li><a href="/courses" title="Kursus"><span><i class="fa fa-book"></i></span><span>ByzanCourse</span></a></li>
+                <li><a href="/posts" title="Gallery Kegiatan"><span><i class="fa fa-images"></i></span><span>Gallery</span></a></li>
+                <li><a href="/pedia" title="Artikel Pedia"><span><i class="fa fa-newspaper"></i></span><span>Artikel</span></a></li>
+                <li><a href="/ebooks" title="Ebook Gratis"><span><i class="fa fa-file-pdf"></i></span><span>ByzanEbook</span></a></li>
+                <li><a href="/byzanpedia" title="Byzan Pedia"><span><i class="fa fa-book-open"></i></span><span>ByzanPedia</span></a></li>
+                <li><a href="/about" title="Tentang"><span><i class="fa fa-info-circle"></i></span><span>About</span></a></li>
+                <li><a href="/contact" title="Kontak"><span><i class="fa fa-envelope"></i></span><span>Contact</span></a></li>
+            </ul>
+
+            <div class="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <div class="auth-buttons">
+                <a href="#" class="search-icon"><i class="fa fa-search"></i></a>
+                <% if (isAuthenticated) { %>
+                    <% if (isAdmin) { %>
+                        <a href="/admin" class="sign-in"><i class="fas fa-cog me-1"></i>Admin</a>
+                    <% } %>
+                    <div class="nav-item dropdown">
+                        <a class="sign-in dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user me-1"></i><%= user.full_name %>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/profile">Profil</a></li>
+                            <li><a class="dropdown-item" href="/enrollment/my-courses">Kursus Saya</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/auth/logout">Logout</a></li>
+                        </ul>
+                    </div>
+                <% } else { %>
+                    <a href="/auth/login" class="sign-in">Sign in</a>
+                    <a href="/auth/register" class="sign-up">Sign up</a>
+                <% } %>
+            </div>
+        </nav>
+    </header>
 
     <!-- Flash Messages -->
     <% if (success_msg && success_msg.length > 0) { %>

@@ -1,86 +1,21 @@
 const express = require('express');
 const Ebook = require('../models/Ebook');
+const { 
+    getAllEbooks, 
+    getEbookBySlug, 
+    searchEbooks 
+} = require('../controllers/ebookController');
 
 const router = express.Router();
 
 // All ebooks page
-router.get('/', async (req, res) => {
-    try {
-        const page = parseInt(req.query.page) || 1;
-        const limit = 12;
-        const offset = (page - 1) * limit;
-        const search = req.query.search;
-        
-        let ebooks, totalEbooks;
-        
-        if (search) {
-            ebooks = await Ebook.search(search, limit);
-            totalEbooks = ebooks.length;
-        } else {
-            ebooks = await Ebook.getAll(limit, offset);
-            totalEbooks = await Ebook.count();
-        }
-        
-        const totalPages = Math.ceil(totalEbooks / limit);
-        
-        res.render('ebooks/index', {
-            title: 'Ebook Gratis - ByzantiumEdu',
-            ebooks,
-            currentPage: page,
-            totalPages,
-            hasNextPage: page < totalPages,
-            hasPrevPage: page > 1,
-            search,
-            isAuthenticated: req.session.user ? true : false,
-            user: req.session.user
-        });
-    } catch (error) {
-        console.error('Ebooks page error:', error);
-        res.render('ebooks/index', {
-            title: 'Ebook Gratis - ByzantiumEdu',
-            ebooks: [],
-            currentPage: 1,
-            totalPages: 1,
-            hasNextPage: false,
-            hasPrevPage: false,
-            search: req.query.search,
-            isAuthenticated: req.session.user ? true : false,
-            user: req.session.user
-        });
-    }
-});
+router.get('/', getAllEbooks);
 
 // Ebook detail page
-router.get('/:slug', async (req, res) => {
-    try {
-        const { slug } = req.params;
-        const ebook = await Ebook.findBySlug(slug);
-        
-        if (!ebook) {
-            return res.status(404).render('error/404', {
-                title: 'Ebook Tidak Ditemukan',
-                user: req.session.user
-            });
-        }
-        
-        // Get related ebooks
-        const relatedEbooks = await Ebook.getRandom(3);
-        
-        res.render('ebooks/detail', {
-            title: `${ebook.title} - ByzantiumEdu`,
-            ebook,
-            relatedEbooks,
-            isAuthenticated: req.session.user ? true : false,
-            user: req.session.user
-        });
-    } catch (error) {
-        console.error('Ebook detail error:', error);
-        res.status(500).render('error/500', {
-            title: 'Terjadi Kesalahan',
-            user: req.session.user
-        });
-    }
-});
+router.get('/:slug', getEbookBySlug);
+
+// Search ebooks
+router.get('/search', searchEbooks);
 
 // Download ebook
 router.get('/:id/download', async (req, res) => {

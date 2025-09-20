@@ -12,6 +12,11 @@ const Pedia = require('../models/Pedia');
 const User = require('../models/User');
 const Instructor = require('../models/Instructor');
 const Ebook = require('../models/Ebook');
+const { 
+    getAdminDashboard, 
+    getAllUsers, 
+    getUserById 
+} = require('../controllers/adminController');
 
 const router = express.Router();
 
@@ -66,44 +71,7 @@ const pdfUpload = multer({
 });
 
 // Admin dashboard
-router.get('/', isAdmin, async (req, res) => {
-    try {
-        const totalUsers = await User.count();
-        const totalCourses = await Course.count();
-        const totalPosts = await Post.count();
-        const totalPedia = await Pedia.count();
-        const totalInstructors = await Instructor.count();
-        const totalEbooks = await Ebook.count(true); // Include drafts for admin
-        
-        const recentCourses = await Course.getAll(5, 0);
-        const recentPosts = await Post.getAll(5, 0);
-        const recentUsers = await User.getAll(5, 0);
-        
-        res.render('admin/dashboard', {
-            title: 'Dashboard Admin - ByzantiumEdu',
-            stats: {
-                totalUsers,
-                totalCourses,
-                totalPosts,
-                totalPedia,
-                totalInstructors,
-                totalEbooks
-            },
-            recentCourses,
-            recentPosts,
-            recentUsers
-        });
-    } catch (error) {
-        console.error('Admin dashboard error:', error);
-        res.render('admin/dashboard', {
-            title: 'Dashboard Admin - ByzantiumEdu',
-            stats: { totalUsers: 0, totalCourses: 0, totalPosts: 0, totalPedia: 0 },
-            recentCourses: [],
-            recentPosts: [],
-            recentUsers: []
-        });
-    }
-});
+router.get('/', isAdmin, getAdminDashboard);
 
 // Course management
 router.get('/courses', isAdmin, async (req, res) => {
@@ -393,36 +361,10 @@ router.post('/posts/create', isAdmin, upload.fields([
 });
 
 // User management
-router.get('/users', isAdmin, async (req, res) => {
-    try {
-        const page = parseInt(req.query.page) || 1;
-        const limit = 10;
-        const offset = (page - 1) * limit;
-        
-        const users = await User.getAll(limit, offset);
-        const totalUsers = await User.count();
-        const totalPages = Math.ceil(totalUsers / limit);
-        
-        res.render('admin/users/index', {
-            title: 'Kelola Pengguna - ByzantiumEdu',
-            users,
-            currentPage: page,
-            totalPages,
-            hasNextPage: page < totalPages,
-            hasPrevPage: page > 1
-        });
-    } catch (error) {
-        console.error('Admin users error:', error);
-        res.render('admin/users/index', {
-            title: 'Kelola Pengguna - ByzantiumEdu',
-            users: [],
-            currentPage: 1,
-            totalPages: 1,
-            hasNextPage: false,
-            hasPrevPage: false
-        });
-    }
-});
+router.get('/users', isAdmin, getAllUsers);
+
+// User detail
+router.get('/users/:id', isAdmin, getUserById);
 
 // Course Modules Management
 router.get('/courses/:id/modules', isAdmin, async (req, res) => {
@@ -938,4 +880,4 @@ router.post('/ebooks/:id/delete', isAdmin, async (req, res) => {
     }
 });
 
-module.exports = router; 
+module.exports = router;

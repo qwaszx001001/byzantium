@@ -24,7 +24,7 @@ console.log('Environment loaded:', {
 const app = express();
 const PORT = process.env.PORT || 3091;
 
-// Trust proxy - required for secure cookies behind a proxy/load balancer
+// Trust first proxy
 app.set('trust proxy', 1);
 
 // Database connection
@@ -39,33 +39,35 @@ const options = {
     database: process.env.DB_NAME,
     clearExpired: true,
     checkExpirationInterval: 900000,
-    expiration: 86400000, // 24 hours
-    createDatabaseTable: true,
-    schema: {
-        tableName: 'sessions',
-        columnNames: {
-            session_id: 'session_id',
-            expires: 'expires',
-            data: 'data'
-        }
-    }
+    expiration: 86400000,
+    createDatabaseTable: true
 };
 
 const sessionStore = new MySQLStore(options);
 
 // Session configuration
-app.use(session({
-    key: 'byzantium_session',
+const sessionConfig = {
+    name: 'byzantium.sid',
     secret: process.env.SESSION_SECRET,
     store: sessionStore,
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
+    rolling: true,
     cookie: {
-        secure: process.env.SESSION_SECURE === 'true',
         httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
         maxAge: 24 * 60 * 60 * 1000 // 24 hours
     }
-}));
+};
+
+// In production, serve secure cookies
+if (process.env.NODE_ENV === 'production') {
+    app.set('trust proxy', 1);
+    sessionConfig.cookie.secure = true;
+    sessionConfig.cookie.sameSite = 'none';
+}
+
+app.use(session(sessionConfig));
 
 // Middleware
 app.use(helmet({
@@ -122,7 +124,7 @@ app.use(helmet({
 }));
 
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || true,
+    origin: true,
     credentials: true
 }));
 
@@ -152,6 +154,11 @@ app.use((req, res, next) => {
             host: req.headers.host
         }
     });
+
+    // Ensure session
+    if (!req.session) {
+        console.error('No session available');
+    }
 
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');

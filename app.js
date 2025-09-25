@@ -17,17 +17,53 @@ app.use(helmet({
     contentSecurityPolicy: {
         directives: {
             defaultSrc: ["'self'"],
-            styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com"],
-            scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com"],
+            styleSrc: [
+                "'self'", 
+                "'unsafe-inline'", 
+                "https://cdn.jsdelivr.net", 
+                "https://cdnjs.cloudflare.com", 
+                "https://fonts.googleapis.com"
+            ],
+            scriptSrc: [
+                "'self'", 
+                "'unsafe-inline'", 
+                "'unsafe-eval'",
+                "https://cdn.jsdelivr.net", 
+                "https://cdnjs.cloudflare.com",
+                "https://static.cloudflareinsights.com"
+            ],
             scriptSrcAttr: ["'unsafe-inline'"],
-            fontSrc: ["'self'", "https://cdnjs.cloudflare.com", "https://fonts.gstatic.com"],
-            imgSrc: ["'self'", "data:", "https:"],
-            connectSrc: ["'self'"],
-            frameSrc: ["'self'", "https://www.youtube.com", "https://youtube.com", "https://www.youtube-nocookie.com", "https://youtu.be"],
+            fontSrc: [
+                "'self'", 
+                "https://cdnjs.cloudflare.com", 
+                "https://fonts.gstatic.com"
+            ],
+            imgSrc: [
+                "'self'", 
+                "data:", 
+                "https:",
+                "http:",
+                "blob:"
+            ],
+            connectSrc: [
+                "'self'",
+                "https://cdn.jsdelivr.net",
+                "https://cdnjs.cloudflare.com",
+                "https://static.cloudflareinsights.com"
+            ],
+            frameSrc: [
+                "'self'", 
+                "https://www.youtube.com", 
+                "https://youtube.com", 
+                "https://www.youtube-nocookie.com", 
+                "https://youtu.be"
+            ],
             objectSrc: ["'none'"],
             upgradeInsecureRequests: []
         }
-    }
+    },
+    crossOriginEmbedderPolicy: false,
+    crossOriginResourcePolicy: false
 }));
 app.use(cors());
 app.use(express.json());

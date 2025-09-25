@@ -44,18 +44,32 @@ const login = async (req, res) => {
         }
         
         // Set session
-        req.session.user = {
+        const sessionUser = {
             id: user.id,
             full_name: user.full_name,
             email: user.email,
             role: user.role,
             avatar: user.avatar
         };
-        console.log('Session set:', req.session.user);
         
-        req.flash('success_msg', 'Berhasil masuk');
-        console.log('Login successful, redirecting to home');
-        res.redirect('/');
+        req.session.user = sessionUser;
+        
+        // Save session explicitly
+        req.session.save((err) => {
+            if (err) {
+                console.error('Session save error:', err);
+                req.flash('error_msg', 'Terjadi kesalahan saat masuk');
+                return res.redirect('/auth');
+            }
+            
+            console.log('Session saved successfully:', {
+                sessionID: req.sessionID,
+                user: req.session.user
+            });
+            
+            req.flash('success_msg', 'Berhasil masuk');
+            res.redirect('/');
+        });
     } catch (error) {
         console.error('Login error:', error);
         req.flash('error_msg', 'Terjadi kesalahan saat masuk');
@@ -99,9 +113,10 @@ const logout = (req, res) => {
         if (err) {
             console.error('Logout error:', err);
             req.flash('error_msg', 'Terjadi kesalahan saat keluar');
-        } else {
-            res.redirect('/');
+            return res.redirect('/');
         }
+        res.clearCookie('byzantium_session');
+        res.redirect('/');
     });
 };
 

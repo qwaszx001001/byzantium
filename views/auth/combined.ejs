@@ -1,0 +1,665 @@
+<%-
+ include('../layouts/main', { 
+ title: title, 
+ user: user, 
+ isAuthenticated: typeof user !== 'undefined',
+ isAdmin: user && user.role === 'admin',
+ success_msg: success_msg,
+ error_msg: error_msg
+ }) 
+%>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: linear-gradient(135deg, #e8f5e8 0%, #d4eecd 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        margin-top: 90px !important;
+    }
+
+    .auth-container {
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        max-width: 1000px;
+        width: 100%;
+        min-height: 600px;
+        margin: 30px auto;
+    }
+
+    .left-panel {
+        background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
+        padding: 60px 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .left-panel::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+        animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(180deg); }
+    }
+
+    .illustration {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        max-width: 300px;
+    }
+
+    .study-figure {
+        width: 200px;
+        height: 200px;
+        background: linear-gradient(135deg, #66bb6a 0%, #4caf50 100%);
+        border-radius: 50%;
+        margin: 0 auto 30px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+        animation: pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+
+    .study-figure::before {
+        content: '📚';
+        font-size: 80px;
+        animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    .floating-elements {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+
+    .floating-elements::before,
+    .floating-elements::after {
+        content: '';
+        position: absolute;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        animation: float-elements 4s ease-in-out infinite;
+    }
+
+    .floating-elements::before {
+        width: 60px;
+        height: 60px;
+        top: 20%;
+        left: 10%;
+        animation-delay: 0s;
+    }
+
+    .floating-elements::after {
+        width: 40px;
+        height: 40px;
+        bottom: 30%;
+        right: 15%;
+        animation-delay: 2s;
+    }
+
+    @keyframes float-elements {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-15px) rotate(180deg); }
+    }
+
+    .left-panel h1 {
+        color: #2e7d32;
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 16px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .left-panel p {
+        color: #388e3c;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        text-align: center;
+        font-weight: 500;
+    }
+
+    .right-panel {
+        padding: 60px 50px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .logo {
+        display: none; /* Hidden since we're using the main header */
+    }
+
+    .form-container {
+        position: relative;
+    }
+
+    .form {
+        display: none;
+    }
+
+    .form.active {
+        display: block;
+        animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .field-hint {
+        margin-top: 6px;
+    }
+
+    .form-input.error {
+        border-color: #f44336;
+        background-color: #ffebee;
+    }
+
+    .form-input.success {
+        border-color: #4caf50;
+    }
+
+    .form-group {
+        margin-bottom: 24px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #2e7d32;
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 16px 20px;
+        border: 2px solid #e8f5e9;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #fafafa;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: #4caf50;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+    }
+
+    .forgot-password {
+        text-align: right;
+        margin-top: 8px;
+    }
+
+    .forgot-password a {
+        color: #4caf50;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color 0.3s ease;
+    }
+
+    .forgot-password a:hover {
+        color: #388e3c;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 24px;
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    .divider {
+        text-align: center;
+        margin: 24px 0;
+        position: relative;
+        color: #666;
+    }
+
+    .divider::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: #e0e0e0;
+    }
+
+    .divider span {
+        background: white;
+        padding: 0 20px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .google-btn {
+        width: 100%;
+        padding: 16px;
+        border: 2px solid #e0e0e0;
+        background: white;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 24px;
+    }
+
+    .google-btn:hover {
+        border-color: #4caf50;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .google-icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 12px;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%234285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="%2334A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="%23FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="%23EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>') no-repeat center;
+        background-size: contain;
+    }
+
+    .auth-switch {
+        text-align: center;
+        color: #666;
+    }
+
+    .auth-switch a {
+        color: #4caf50;
+        text-decoration: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+    .auth-switch a:hover {
+        color: #388e3c;
+    }
+
+    .form-tabs {
+        display: flex;
+        margin-bottom: 32px;
+        border-radius: 12px;
+        background: #f5f5f5;
+        padding: 4px;
+    }
+
+    .tab-btn {
+        flex: 1;
+        padding: 12px 24px;
+        border: none;
+        background: transparent;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        color: #666;
+    }
+
+    .tab-btn.active {
+        background: white;
+        color: #4caf50;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (max-width: 768px) {
+        .auth-container {
+            grid-template-columns: 1fr;
+            max-width: 400px;
+        }
+        
+        .left-panel {
+            display: none;
+        }
+        
+        .right-panel {
+            padding: 40px 30px;
+        }
+    }
+    
+    /* Flash Messages */
+    .alert {
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin-bottom: 24px;
+        font-weight: 500;
+        margin: 20px;
+    }
+    
+    .alert-success {
+        background: #e8f5e9;
+        border: 1px solid #4caf50;
+        color: #2e7d32;
+    }
+    
+    .alert-danger {
+        background: #ffebee;
+        border: 1px solid #f44336;
+        color: #c62828;
+    }
+    
+    .btn-close {
+        opacity: 0.7;
+    }
+    
+    main {
+        margin-top: 90px !important;
+    }
+</style>
+
+<div class="auth-container">
+    <div class="left-panel">
+        <div class="floating-elements"></div>
+        <div class="illustration">
+            <div class="study-figure"></div>
+            <h1>Byzan</h1>
+            <h1>Education</h1>
+            <p>Menghadirkan Ilmu Islam dalam Sentuhan Modern.</p>
+        </div>
+    </div>
+    
+    <div class="right-panel">
+        <div class="logo">
+            <div class="logo-icon">B</div>
+            <div class="logo-text">Byzan <span class="hub">Education</span></div>
+        </div>
+        
+        <!-- Flash Messages -->
+        <% if (success_msg && success_msg.length > 0) { %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i><%= success_msg %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <% } %>
+        
+        <% if (error_msg && error_msg.length > 0) { %>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i><%= error_msg %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <% } %>
+        
+        <div class="form-tabs">
+            <button class="tab-btn active" onclick="switchTab('login')">Sign In</button>
+            <button class="tab-btn" onclick="switchTab('register')">Register</button>
+        </div>
+        
+        <div class="form-container">
+            <!-- Login Form -->
+            <div id="loginForm" class="form active">
+                <form action="/auth" method="POST">
+                    <input type="hidden" name="action" value="login">
+                    <div class="form-group">
+                        <label for="loginEmail">Username or email</label>
+                        <input type="text" id="loginEmail" name="email" class="form-input" placeholder="Masukkan email Anda" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" name="password" class="form-input" placeholder="••••••••••" required>
+                        <div class="forgot-password">
+                            <a href="#" onclick="showForgotPassword()">Lupa password?</a>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Sign In</button>
+                </form>
+                
+                <div class="divider"><span>atau</span></div>
+                
+                <button class="google-btn">
+                    <div class="google-icon"></div>
+                    Sign in dengan Google
+                </button>
+            </div>
+            
+            <!-- Register Form -->
+            <div id="registerForm" class="form">
+                <form action="/auth" method="POST">
+                    <input type="hidden" name="action" value="register">
+                    <div class="form-group">
+                        <label for="registerName">Nama Lengkap</label>
+                        <input type="text" id="registerName" name="full_name" class="form-input" placeholder="Nama lengkap Anda" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerUsername">Username</label>
+                        <input type="text" id="registerUsername" name="username" class="form-input" placeholder="Username Anda" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" name="email" class="form-input" placeholder="email@contoh.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerPhone">Nomor Telepon</label>
+                        <input type="tel" id="registerPhone" name="phone" class="form-input" placeholder="081234567890" maxlength="14">
+                        <div class="field-hint">
+                            <small style="color: #666; font-size: 0.85rem;">Masukkan 10-13 digit (contoh: 081234567890)</small>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerPassword">Password</label>
+                        <input type="password" id="registerPassword" name="password" class="form-input" placeholder="••••••••••" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmPassword">Konfirmasi Password</label>
+                        <input type="password" id="confirmPassword" name="password2" class="form-input" placeholder="••••••••••" required>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Buat Akun</button>
+                </form>
+                
+                <div class="divider"><span>atau</span></div>
+                
+                <button class="google-btn">
+                    <div class="google-icon"></div>
+                    Daftar dengan Google
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include SweetAlert library -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Show SweetAlert notifications for flash messages
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check for flash messages passed from the server
+        const successMsg = document.querySelector('.alert-success');
+        const errorMsg = document.querySelector('.alert-danger');
+        
+        if (successMsg) {
+            const message = successMsg.textContent.trim();
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: message,
+                confirmButtonColor: '#4caf50'
+            }).then(() => {
+                // Remove the alert after showing it
+                successMsg.remove();
+            });
+        }
+        
+        if (errorMsg) {
+            const message = errorMsg.textContent.trim();
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: message,
+                confirmButtonColor: '#4caf50'
+            }).then(() => {
+                // Remove the alert after showing it
+                errorMsg.remove();
+            });
+        }
+    });
+    
+    function switchTab(tab) {
+        // Remove active class from all tabs and forms
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.form').forEach(form => form.classList.remove('active'));
+        
+        // Add active class to selected tab and form
+        event.target.classList.add('active');
+        
+        if (tab === 'login') {
+            document.getElementById('loginForm').classList.add('active');
+        } else {
+            document.getElementById('registerForm').classList.add('active');
+        }
+    }
+    
+    function showForgotPassword() {
+        Swal.fire({
+            title: 'Lupa Password',
+            text: 'Fungsi lupa password akan diimplementasikan di sini',
+            icon: 'info',
+            confirmButtonColor: '#4caf50'
+        });
+    }
+    
+    // Handle form submissions
+    document.addEventListener('DOMContentLoaded', function() {
+        const loginForm = document.querySelector('#loginForm form');
+        const registerForm = document.querySelector('#registerForm form');
+        const phoneInput = document.getElementById('registerPhone');
+        
+        // Phone number input validation (only allow numbers)
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function(e) {
+                // Remove any non-numeric characters
+                let value = e.target.value.replace(/[^0-9]/g, '');
+                
+                // Limit to 13 characters
+                if (value.length > 13) {
+                    value = value.substring(0, 13);
+                }
+                
+                e.target.value = value;
+                
+                // Visual validation feedback
+                if (value.length >= 10 && value.length <= 13) {
+                    e.target.classList.remove('error');
+                    e.target.classList.add('success');
+                } else if (value.length > 0) {
+                    e.target.classList.remove('success');
+                    e.target.classList.add('error');
+                } else {
+                    e.target.classList.remove('error', 'success');
+                }
+            });
+        }
+        
+        registerForm.addEventListener('submit', function(e) {
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Validate password match
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Password tidak cocok!',
+                    confirmButtonColor: '#4caf50'
+                });
+                return;
+            }
+            
+            // Validate phone number if provided
+            const phone = document.getElementById('registerPhone').value;
+            if (phone) {
+                const phoneRegex = /^[0-9]{10,13}$/;
+                if (!phoneRegex.test(phone)) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Nomor telepon harus 10-13 digit dan hanya berisi angka!',
+                        confirmButtonColor: '#4caf50'
+                    });
+                    return;
+                }
+            }
+        });
+        
+        // Google sign in buttons
+        document.querySelectorAll('.google-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                Swal.fire({
+                    title: 'Google Sign In',
+                    text: 'Integrasi Google OAuth akan diimplementasikan di sini',
+                    icon: 'info',
+                    confirmButtonColor: '#4caf50'
+                });
+            });
+        });
+    });
+</script>

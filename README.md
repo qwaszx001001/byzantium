@@ -154,10 +154,8 @@ Setelah menjalankan schema database, Anda dapat login sebagai admin dengan:
 ## 📚 API Endpoints
 
 ### Authentication
-- `GET /auth/login` - Halaman login
-- `POST /auth/login` - Proses login
-- `GET /auth/register` - Halaman register
-- `POST /auth/register` - Proses register
+- `GET /auth` - Menampilkan form login/register
+- `POST /auth` - Proses login/register
 - `GET /auth/logout` - Logout
 
 ### Courses

@@ -2,28 +2,35 @@ const express = require('express');
 const { body, validationResult } = require('express-validator');
 const { isNotAuthenticated } = require('../middleware/auth');
 const { 
-    showRegisterForm, 
-    register, 
-    showLoginForm, 
-    login, 
+    showCombinedAuthForm,
+    registerCombined,
+    login,
     logout 
 } = require('../controllers/authController');
 
 const router = express.Router();
 
-// Register page
-router.get('/register', isNotAuthenticated, showRegisterForm);
+// Combined login/register page (default)
+router.get('/', isNotAuthenticated, showCombinedAuthForm);
 
-// Register process
-router.post('/register', register);
+// Combined login/register page
+router.get('/combined', isNotAuthenticated, showCombinedAuthForm);
 
-// Login page
-router.get('/login', isNotAuthenticated, showLoginForm);
-
-// Login process
-router.post('/login', isNotAuthenticated, login);
+// Combined login/register process
+router.post('/', isNotAuthenticated, async (req, res) => {
+    const { action } = req.body;
+    
+    if (action === 'login') {
+        return login(req, res);
+    } else if (action === 'register') {
+        return registerCombined(req, res);
+    } else {
+        req.flash('error_msg', 'Invalid action');
+        return res.redirect('/auth');
+    }
+});
 
 // Logout
 router.get('/logout', logout);
 
-module.exports = router; 
+module.exports = router;

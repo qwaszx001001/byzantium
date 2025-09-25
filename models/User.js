@@ -4,7 +4,14 @@ const bcrypt = require('bcryptjs');
 class User {
     static async create(userData) {
         try {
-            const { username, email, password, full_name, role = 'user' } = userData;
+            // Generate username from email if not provided
+            let { username, email, password, full_name, role = 'user' } = userData;
+            
+            // If username is not provided, create one from the email
+            if (!username) {
+                username = email.split('@')[0]; // Use part before @ as username
+            }
+            
             const hashedPassword = await bcrypt.hash(password, 10);
             
             const [result] = await db.query(

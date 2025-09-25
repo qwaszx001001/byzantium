@@ -1,164 +1,491 @@
 <%- include('../layouts/main', { title: title, user: user }) %>
 
-        <div class="container-fluid px-2 px-md-0">
-            <div class="byz-gallery-container py-5" style="background: linear-gradient(90deg, #2c5530 0%, #1e3a21 100%); position: relative; overflow: hidden; border-radius: 0px;">
-                <!-- Decorative Elements -->
-                <div class="byz-decorative-circle" style="position: absolute; width: 300px; height: 300px; border-radius: 50%; background: rgba(255,255,255,0.03); top: -100px; right: -100px;"></div>
-                <div class="byz-decorative-circle" style="position: absolute; width: 200px; height: 200px; border-radius: 50%; background: rgba(255,255,255,0.02); bottom: -50px; left: -50px;"></div>
-                
-                <!-- Header -->
-                <div class="row mb-4">
-                    <div class="col-12 text-center">
-                        <h1 class="byz-gallery-title fw-bold mb-2 text-white" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">Gallery Kegiatan</h1>
-                        <p class="byz-gallery-subtitle text-light lead" style="opacity: 0.9; font-size: 1rem;">Dokumentasi kegiatan mengajar, workshop, dan aktivitas pendidikan</p>
-                    </div>
-                </div>
-
-                <!-- Search Bar -->
-                <div class="row mb-4">
-                    <div class="col-md-6 mx-auto">
-                        <form method="GET" class="byz-gallery-search d-flex" style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; backdrop-filter: blur(10px);">
-                            <input type="text" class="form-control form-control-sm me-2" name="q" placeholder="Cari kegiatan..." value="<%= query %>" style="border: none; background: rgba(255,255,255,0.9);">
-                            <button type="submit" class="byz-btn-search btn btn-sm btn-light" style="transition: all 0.3s ease;">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Activities Grid -->
-                <div class="px-2 px-md-4">
-                    <% if (posts && posts.length > 0) { %>
-                        <div class="row g-3">
-                            <% posts.forEach(post => { %>
-                                <div class="col-lg-3 col-md-4 col-sm-6">
-                                    <div class="byz-activity-card card h-100" style="border: none; border-radius: 8px; overflow: hidden; transition: all 0.3s ease; transform: translateY(0); box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                                        <!-- Featured Image -->
-                                        <% if (post.featured_image) { %>
-                                            <div class="byz-activity-image-container position-relative" style="overflow: hidden;">
-                                                <img src="<%= post.featured_image %>" class="card-img-top" alt="<%= post.title %>" style="height: 160px; object-fit: cover; transition: all 0.5s ease;">
-                                                <div class="byz-activity-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(44,85,48,0.2), rgba(30,58,33,0.8)); opacity: 0; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center;">
-                                                    <a href="/posts/<%= post.slug %>" class="byz-btn-view btn btn-light btn-sm" style="transform: translateY(20px); transition: all 0.3s ease; font-size: 0.8rem;">
-                                                        <i class="fas fa-eye me-1"></i>Detail
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        <% } else { %>
-                                            <div class="byz-activity-placeholder card-img-top d-flex align-items-center justify-content-center" style="height: 160px; background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));">
-                                                <i class="fas fa-calendar-alt fa-2x" style="color: rgba(255,255,255,0.3);"></i>
-                                            </div>
-                                        <% } %>
-                                        
-                                        <div class="card-body p-2" style="background: white;">
-                                            <h6 class="byz-activity-title card-title fw-bold mb-2" style="font-size: 0.9rem;">
-                                                <a href="/posts/<%= post.slug %>" class="text-decoration-none" style="color: #2c5530; transition: color 0.3s ease;">
-                                                    <%= post.title %>
-                                                </a>
-                                            </h6>
-                                            
-                                            <% if (post.excerpt) { %>
-                                                <p class="byz-activity-excerpt card-text mb-2" style="color: #666; font-size: 0.8rem;">
-                                                    <%= post.excerpt.length > 60 ? post.excerpt.substring(0, 60) + '...' : post.excerpt %>
-                                                </p>
-                                            <% } %>
-                                            
-                                            <div class="byz-activity-meta" style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 8px; margin-top: 8px;">
-                                                <div class="row g-2" style="color: #888; font-size: 0.75rem;">
-                                                    <div class="col-6">
-                                                        <i class="fas fa-calendar me-1" style="color: #2c5530;"></i>
-                                                        <% if (post.activity_date) { %>
-                                                            <%= new Date(post.activity_date).toLocaleDateString('id-ID') %>
-                                                        <% } else { %>
-                                                            -
-                                                        <% } %>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <i class="fas fa-tag me-1" style="color: #2c5530;"></i>
-                                                        <%= post.category_name || 'Umum' %>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="byz-activity-footer card-footer py-2 px-2" style="background: white; border-top: 1px solid rgba(0,0,0,0.05);">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <small style="color: #888; font-size: 0.75rem;">
-                                                    <i class="fas fa-eye me-1" style="color: #2c5530;"></i>
-                                                    <%= post.view_count || 0 %>
-                                                </small>
-                                                <a href="/posts/<%= post.slug %>" class="byz-btn-detail btn btn-sm" style="background: #2c5530; color: white; transition: all 0.3s ease; font-size: 0.75rem; padding: 2px 8px;">
-                                                    Detail
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            <% }); %>
-                        </div>
-
-                        <!-- Pagination -->
-                        <% if (totalPages > 1) { %>
-                            <nav aria-label="Gallery pagination" class="mt-4">
-                                <ul class="byz-gallery-pagination pagination pagination-sm justify-content-center">
-                                    <% if (hasPrevPage) { %>
-                                        <li class="page-item">
-                                            <a class="page-link" href="?page=<%= currentPage - 1 %>&q=<%= query %>" style="background: rgba(255,255,255,0.9); border: none; color: #2c5530; transition: all 0.3s ease;">Previous</a>
-                                        </li>
-                                    <% } %>
-                                    
-                                    <% for (let i = 1; i <= totalPages; i++) { %>
-                                        <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                                            <a class="page-link" href="?page=<%= i %>&q=<%= query %>" style="background: <%= i === currentPage ? '#2c5530' : 'rgba(255,255,255,0.9)' %>; border: none; color: <%= i === currentPage ? 'white' : '#2c5530' %>; margin: 0 2px; transition: all 0.3s ease;"><%= i %></a>
-                                        </li>
-                                    <% } %>
-                                    
-                                    <% if (hasNextPage) { %>
-                                        <li class="page-item">
-                                            <a class="page-link" href="?page=<%= currentPage + 1 %>&q=<%= query %>" style="background: rgba(255,255,255,0.9); border: none; color: #2c5530; transition: all 0.3s ease;">Next</a>
-                                        </li>
-                                    <% } %>
-                                </ul>
-                            </nav>
-                        <% } %>
-                    <% } else { %>
-                        <div class="byz-gallery-empty text-center py-4" style="background: rgba(255,255,255,0.05); border-radius: 8px; backdrop-filter: blur(10px);">
-                            <i class="fas fa-calendar-alt fa-2x mb-2" style="color: rgba(255,255,255,0.5);"></i>
-                            <h6 class="text-white mb-1" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">Belum ada kegiatan</h6>
-                            <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Kegiatan akan ditampilkan di sini setelah ditambahkan.</p>
-                        </div>
-                    <% } %>
-                </div>
-            </div>
-        </div>
-        <%- include('../layouts/footer') %>
-
 <style>
-.byz-activity-card:hover {
-    transform: translateY(-3px) !important;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important;
-}
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-.byz-activity-card:hover .byz-activity-overlay {
-    opacity: 1 !important;
-}
+    body {
+        font-family: 'Georgia', serif;
+        background-color: #f7f2e5;
+        line-height: 1.6;
+    }
 
-.byz-activity-card:hover .byz-activity-image-container img {
-    transform: scale(1.05);
-}
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 40px;
+    }
 
-.byz-activity-card:hover .byz-btn-view {
-    transform: translateY(0) !important;
-}
+    .main-content {
+        padding: 30px 0;
+    }
 
-.byz-btn-search:hover,
-.byz-btn-detail:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-}
+    .header {
+        margin-bottom: 30px;
+    }
 
-.page-link:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-}
+    .header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 8px;
+    }
+
+    .header p {
+        color: #6b7280;
+        font-size: 1rem;
+    }
+
+    .filter-tabs {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 10px;
+    }
+
+    .tab {
+        padding: 8px 0;
+        color: #6b7280;
+        text-decoration: none;
+        font-weight: 500;
+        border-bottom: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    .tab.active {
+        color: #1a1a1a;
+        border-bottom-color: #3b82f6;
+    }
+
+    .tab:hover {
+        color: #1a1a1a;
+    }
+
+    .article-grid {
+        display: grid;
+        gap: 30px;
+    }
+
+    .article-card {
+        display: flex;
+        gap: 20px;
+        padding-bottom: 30px;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .article-card:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .article-image {
+        width: 200px;
+        height: 140px;
+        border-radius: 8px;
+        object-fit: cover;
+        flex-shrink: 0;
+    }
+
+    .article-content {
+        flex: 1;
+    }
+
+    .article-meta {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+        font-size: 0.875rem;
+        color: #6b7280;
+    }
+
+    .category-tag {
+        background: #f3f4f6;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-weight: 500;
+        color: #374151;
+    }
+
+    .article-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 8px;
+        line-height: 1.4;
+    }
+
+    .article-description {
+        color: #6b7280;
+        margin-bottom: 15px;
+        line-height: 1.5;
+    }
+
+    .article-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .author-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .author-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #e5e7eb;
+    }
+
+    .author-name {
+        font-weight: 500;
+        color: #374151;
+        font-size: 0.875rem;
+    }
+
+    .article-stats {
+        display: flex;
+        gap: 15px;
+        font-size: 0.875rem;
+        color: #6b7280;
+    }
+
+    .sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .sidebar-section {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 25px;
+    }
+
+    .sidebar-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 20px;
+    }
+
+    .topic-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .topic-item:last-child {
+        border-bottom: none;
+    }
+
+    .topic-name {
+        color: #374151;
+        font-weight: 500;
+    }
+
+    .topic-count {
+        color: #6b7280;
+        font-size: 0.875rem;
+    }
+
+    .see-more {
+        color: #f59e0b;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.875rem;
+        margin-top: 10px;
+        display: inline-block;
+    }
+
+    .writer-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .writer-item:last-child {
+        border-bottom: none;
+    }
+
+    .writer-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .writer-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #e5e7eb;
+    }
+
+    .writer-details h4 {
+        font-weight: 500;
+        color: #374151;
+        font-size: 0.9rem;
+    }
+
+    .writer-details p {
+        color: #6b7280;
+        font-size: 0.8rem;
+    }
+
+    .follow-btn {
+        background: #1a1a1a;
+        color: white;
+        border: none;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .premium-section {
+        background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+        color: white;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .premium-icon {
+        font-size: 2rem;
+        margin-bottom: 15px;
+    }
+
+    .premium-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: white;
+    }
+
+    .premium-description {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        margin-bottom: 20px;
+        line-height: 1.5;
+    }
+
+    .premium-btn {
+        background: #f59e0b;
+        color: #1a1a1a;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            grid-template-columns: 1fr;
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .article-card {
+            flex-direction: column;
+        }
+
+        .article-image {
+            width: 100%;
+            height: 200px;
+        }
+    }
 </style>
-    
+
+<div class="container">
+    <main class="main-content">
+        <div class="header">
+            <h1>Artikel & Kegiatan</h1>
+            <p>Temukan berbagai artikel edukasi dan dokumentasi kegiatan terbaru</p>
+        </div>
+
+        <nav class="filter-tabs">
+            <a href="/posts?type=all" class="tab <%= typeof type === 'undefined' || type === 'all' ? 'active' : '' %>">Semua</a>
+            <a href="/posts?type=article" class="tab <%= type === 'article' ? 'active' : '' %>">Artikel</a>
+            <a href="/posts?type=activity" class="tab <%= type === 'activity' ? 'active' : '' %>">Kegiatan</a>
+        </nav>
+
+        <div class="article-grid">
+            <% if ((articles && articles.length > 0) || (posts && posts.length > 0)) { %>
+                <% 
+                    // Combine articles and posts into a single array
+                    let combinedItems = [];
+                    
+                    if (typeof articles !== 'undefined' && articles && articles.length > 0) {
+                        articles.forEach(article => {
+                            combinedItems.push({
+                                ...article,
+                                type: 'article',
+                                date: article.created_at,
+                                view_count: article.view_count || 0,
+                                like_count: article.like_count || 0,
+                                comment_count: article.comment_count || 0
+                            });
+                        });
+                    }
+                    
+                    if (typeof posts !== 'undefined' && posts && posts.length > 0) {
+                        posts.forEach(post => {
+                            combinedItems.push({
+                                ...post,
+                                type: 'activity',
+                                date: post.activity_date || post.created_at,
+                                view_count: post.view_count || 0,
+                                like_count: post.like_count || 0,
+                                comment_count: post.comment_count || 0
+                            });
+                        });
+                    }
+                    
+                    // Sort by date (newest first)
+                    combinedItems.sort((a, b) => new Date(b.date) - new Date(a.date));
+                %>
+                
+                <% combinedItems.forEach(item => { %>
+                    <article class="article-card">
+                        <% if (item.featured_image) { %>
+                            <img src="<%= item.featured_image %>" alt="<%= item.title %>" class="article-image">
+                        <% } else { %>
+                            <div class="article-image" style="background: linear-gradient(45deg, #f3f4f6, #e5e7eb); display: flex; align-items: center; justify-content: center; color: #9ca3af;">
+                                <i class="fas <%= item.type === 'article' ? 'fa-newspaper' : 'fa-calendar-alt' %>" style="font-size: 2rem;"></i>
+                            </div>
+                        <% } %>
+                        <div class="article-content">
+                            <div class="article-meta">
+                                <span><%= new Date(item.date).toLocaleDateString('id-ID') %></span>
+                                <span class="category-tag"><%= item.category_name || (item.type === 'article' ? 'Artikel' : 'Kegiatan') %></span>
+                                <span class="category-tag <%= item.type === 'article' ? 'bg-success' : 'bg-info' %>">
+                                    <%= item.type === 'article' ? 'Artikel' : 'Kegiatan' %>
+                                </span>
+                            </div>
+                            <h2 class="article-title"><%= item.title %></h2>
+                            <p class="article-description">
+                                <%= item.excerpt ? item.excerpt.substring(0, 120) + '...' : 'Tidak ada deskripsi tersedia' %>
+                            </p>
+                            <div class="article-footer">
+                                <div class="author-info">
+                                    <% if (item.author_avatar) { %>
+                                        <img src="<%= item.author_avatar %>" alt="<%= item.author_name %>" class="author-avatar">
+                                    <% } else { %>
+                                        <div class="author-avatar"></div>
+                                    <% } %>
+                                    <span class="author-name"><%= item.author_name || 'Admin' %></span>
+                                </div>
+                                <div class="article-stats">
+                                    <span>❤️ <%= item.like_count || 0 %>k</span>
+                                    <span>💬 <%= item.comment_count || 0 %>k</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                <% }); %>
+            <% } else { %>
+                <div class="col-12 text-center py-5">
+                    <div class="empty-state">
+                        <i class="fas fa-newspaper fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Belum ada artikel atau kegiatan</h5>
+                        <p class="text-muted">Artikel dan kegiatan akan muncul di sini</p>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </main>
+
+    <aside class="sidebar">
+        <div class="sidebar-section">
+            <h3 class="sidebar-title">Kategori Populer</h3>
+            <div class="topic-item">
+                <span class="topic-name"># Pendidikan</span>
+                <span class="topic-count">150 artikel</span>
+            </div>
+            <div class="topic-item">
+                <span class="topic-name"># Teknologi</span>
+                <span class="topic-count">95 artikel</span>
+            </div>
+            <div class="topic-item">
+                <span class="topic-name"># Kegiatan Sekolah</span>
+                <span class="topic-count">42 kegiatan</span>
+            </div>
+            <div class="topic-item">
+                <span class="topic-name"># Pelatihan</span>
+                <span class="topic-count">28 artikel</span>
+            </div>
+            <a href="#" class="see-more">Lihat semua kategori</a>
+        </div>
+
+        <div class="sidebar-section">
+            <h3 class="sidebar-title">Penulis Terbaik</h3>
+            <div class="writer-item">
+                <div class="writer-info">
+                    <div class="writer-avatar"></div>
+                    <div class="writer-details">
+                        <h4>Dr. Ahmad Rifai</h4>
+                        <p>Pendidik</p>
+                    </div>
+                </div>
+                <button class="follow-btn">Ikuti</button>
+            </div>
+            <div class="writer-item">
+                <div class="writer-info">
+                    <div class="writer-avatar"></div>
+                    <div class="writer-details">
+                        <h4>Siti Nurhaliza</h4>
+                        <p>Jurnalis</p>
+                    </div>
+                </div>
+                <button class="follow-btn">Ikuti</button>
+            </div>
+            <div class="writer-item">
+                <div class="writer-info">
+                    <div class="writer-avatar"></div>
+                    <div class="writer-details">
+                        <h4>Budi Santoso</h4>
+                        <p>Peneliti</p>
+                    </div>
+                </div>
+                <button class="follow-btn">Ikuti</button>
+            </div>
+            <div class="writer-item">
+                <div class="writer-info">
+                    <div class="writer-avatar"></div>
+                    <div class="writer-details">
+                        <h4>Rina Permata</h4>
+                        <p>Editor</p>
+                    </div>
+                </div>
+                <button class="follow-btn">Ikuti</button>
+            </div>
+            <a href="#" class="see-more">Lihat lebih banyak</a>
+        </div>
+
+        <div class="sidebar-section premium-section">
+            <div class="premium-icon">⭐</div>
+            <h3 class="premium-title">Jadi Member Premium</h3>
+            <p class="premium-description">Akses konten eksklusif, artikel mendalam, dan pengalaman membaca tanpa iklan dengan menjadi Member Premium.</p>
+            <button class="premium-btn">Lihat Semua Paket</button>
+        </div>
+    </aside>
+</div>
+
+<%- include('../layouts/footer') %>

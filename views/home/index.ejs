@@ -838,10 +838,18 @@ document.addEventListener('DOMContentLoaded', function() {
             this.classList.add('active');
             
             // Get category from label text
-            const category = this.querySelector('.layanan-label').textContent
-                .toLowerCase()
-                .replace('byzan ', '')
-                .trim();
+            const labelText = this.querySelector('.layanan-label').textContent.trim();
+            let category = 'posts';
+            
+            if (labelText.includes('Artikel & Kegiatan')) {
+                category = 'posts';
+            } else if (labelText.includes('Byzan Course')) {
+                category = 'course';
+            } else if (labelText.includes('Byzan Pedia')) {
+                category = 'pedia';
+            } else if (labelText.includes('Byzan Ebook')) {
+                category = 'ebooks';
+            }
             
             try {
                 // Fetch data from server
@@ -849,7 +857,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const data = await response.json();
                 
                 if (data.success) {
-                    updateCards(data.items);
+                    updateCards(data.items, category);
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -857,21 +865,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    function updateCards(items) {
+    function updateCards(items, category) {
         const cardList = document.querySelector('.card-list');
         const showMoreBtn = document.querySelector('.show-more-btn');
-        const category = document.querySelector('.layanan-item.active').querySelector('.layanan-label').textContent
-            .toLowerCase()
-            .replace('byzan ', '')
-            .trim();
         
         // Update cards
         cardList.innerHTML = items.map(item => {
             const imageUrl = item.featured_image || item.thumbnail || `/assets/default-${category}.jpg`;
             const author = item.author_name || item.instructor_name || 'Admin';
+            const role = category === 'course' ? 'Instruktur' : 
+                        category === 'posts' ? 'Kontributor' : 
+                        category === 'pedia' ? 'Penulis' : 'Admin';
             
             return `
-                <div class="card" onclick="window.location.href='/${category}/${item.slug}'">
+                <div class="card" onclick="window.location.href='/${category === 'pedia' ? 'pedia' : category}/${item.slug}'">
                     <div class="illustration">
                         <img src="${imageUrl}" 
                              alt="${item.title}" 
@@ -889,7 +896,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             >
                             <div class="author-info">
                                 <div class="author-name">${author}</div>
-                                <div class="author-role">${category === 'course' ? 'Instruktur' : 'Kontributor'}</div>
+                                <div class="author-role">${role}</div>
                             </div>
                             <svg class="linkedin" viewBox="0 0 24 24">
                                 <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
@@ -901,7 +908,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }).join('');
 
         // Update show more link
-        showMoreBtn.href = `/${category}`;
+        showMoreBtn.href = `/${category === 'posts' || category === 'pedia' ? 'posts' : category}`;
     }
 });
 </script>
@@ -983,8 +990,8 @@ document.addEventListener('DOMContentLoaded', function() {
 <div class="layanan-title">Layanan Kami</div>
 <div class="layanan-list">
     <div class="layanan-item" style="position: relative;">
-        <span class="layanan-icon"><i class="fas fa-comments"></i></span>
-        <span class="layanan-label">Byzan Post</span>
+        <span class="layanan-icon"><i class="fas fa-images"></i></span>
+        <span class="layanan-label">Artikel & Kegiatan</span>
     </div>
     <div class="layanan-item" style="position: relative;">
         <span class="layanan-icon"><i class="fas fa-book"></i></span>
@@ -993,12 +1000,12 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="layanan-item" style="position: relative;">
         <span class="layanan-icon"><i class="fas fa-book-open"></i></span>
         <span class="layanan-label">Byzan Pedia</span>
-            </div>
+    </div>
     <div class="layanan-item" style="position: relative;">
-        <span class="layanan-icon"><i class="fas fa-newspaper"></i></span>
-        <span class="layanan-label">Byzan News</span>
-            </div>
-        </div>
+        <span class="layanan-icon"><i class="fas fa-file-pdf"></i></span>
+        <span class="layanan-label">Byzan Ebook</span>
+    </div>
+</div>
         
 <!-- Card List Initial State -->
 <div class="card-container">

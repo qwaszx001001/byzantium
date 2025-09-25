@@ -3,7 +3,7 @@ const isAuthenticated = (req, res, next) => {
         return next();
     }
     req.flash('error_msg', 'Silakan login terlebih dahulu');
-    res.redirect('/auth/login');
+    res.redirect('/auth');
 };
 
 const isNotAuthenticated = (req, res, next) => {
@@ -34,4 +34,4 @@ module.exports = {
     isNotAuthenticated,
     isAdmin,
     isAdminOrInstructor
-}; 
+};

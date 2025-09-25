@@ -1,11 +1,14 @@
 const User = require('../models/User');
 const { body, validationResult } = require('express-validator');
 
-// Show login form
-const showLoginForm = (req, res) => {
-    res.render('auth/login', {
-        title: 'Masuk - ByzantiumEdu',
-        user: req.session.user
+// Show combined login/register form
+const showCombinedAuthForm = (req, res) => {
+    res.render('auth/combined', {
+        title: 'Login & Register - ByzantiumEdu',
+        user: req.session.user,
+        errors: req.flash('errors'),
+        success_msg: req.flash('success_msg'),
+        error_msg: req.flash('error_msg')
     });
 };
 
@@ -17,21 +20,21 @@ const login = async (req, res) => {
         // Validate input
         if (!email || !password) {
             req.flash('error_msg', 'Email dan password harus diisi');
-            return res.redirect('/auth/login');
+            return res.redirect('/auth');
         }
         
         // Check user
         const user = await User.findByEmail(email);
         if (!user) {
             req.flash('error_msg', 'Email atau password salah');
-            return res.redirect('/auth/login');
+            return res.redirect('/auth');
         }
         
         // Check password
         const isMatch = await User.comparePassword(password, user.password);
         if (!isMatch) {
             req.flash('error_msg', 'Email atau password salah');
-            return res.redirect('/auth/login');
+            return res.redirect('/auth');
         }
         
         // Set session
@@ -48,52 +51,37 @@ const login = async (req, res) => {
     } catch (error) {
         console.error('Login error:', error);
         req.flash('error_msg', 'Terjadi kesalahan saat masuk');
-        res.redirect('/auth/login');
+        res.redirect('/auth');
     }
 };
 
-// Show register form
-const showRegisterForm = (req, res) => {
-    res.render('auth/register', {
-        title: 'Daftar - ByzantiumEdu',
-        user: req.session.user
-    });
-};
-
-// Handle registration
-const register = async (req, res) => {
+// Handle combined registration
+const registerCombined = async (req, res) => {
     try {
-        const { full_name, email, password, password2 } = req.body;
-        
-        // Validation
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            req.flash('error_msg', errors.array()[0].msg);
-            return res.redirect('/auth/register');
-        }
+        const { username, full_name, email, password, password2 } = req.body;
         
         // Check if passwords match
         if (password !== password2) {
             req.flash('error_msg', 'Password tidak cocok');
-            return res.redirect('/auth/register');
+            return res.redirect('/auth');
         }
         
-        // Check if user exists
-        const existingUser = await User.findByEmail(email);
+        // Check if user exists (by email or username)
+        const existingUser = await User.findByUsernameOrEmail(username, email);
         if (existingUser) {
-            req.flash('error_msg', 'Email sudah terdaftar');
-            return res.redirect('/auth/register');
+            req.flash('error_msg', 'Username atau email sudah terdaftar');
+            return res.redirect('/auth');
         }
         
         // Create user
-        const userId = await User.create({ full_name, email, password });
+        const userId = await User.create({ username, full_name, email, password });
         
         req.flash('success_msg', 'Berhasil mendaftar! Silakan masuk.');
-        res.redirect('/auth/login');
+        res.redirect('/auth');
     } catch (error) {
         console.error('Registration error:', error);
         req.flash('error_msg', 'Terjadi kesalahan saat mendaftar');
-        res.redirect('/auth/register');
+        res.redirect('/auth');
     }
 };
 
@@ -110,9 +98,8 @@ const logout = (req, res) => {
 };
 
 module.exports = {
-    showLoginForm,
+    showCombinedAuthForm,
     login,
-    showRegisterForm,
-    register,
+    registerCombined,
     logout
 };

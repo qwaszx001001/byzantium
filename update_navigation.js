@@ -16,8 +16,7 @@ const filesToUpdate = [
     'views/home/index.ejs',
     'views/home/about.ejs',
     'views/home/contact.ejs',
-    'views/auth/login.ejs',
-    'views/auth/register.ejs',
+    'views/auth/combined.ejs',
     'views/error/404.ejs',
     'views/error/500.ejs'
 ];

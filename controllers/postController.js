@@ -1,4 +1,5 @@
 const Post = require('../models/Post');
+const Pedia = require('../models/Pedia');
 
 // All posts page
 const getAllPosts = async (req, res) => {
@@ -6,32 +7,62 @@ const getAllPosts = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = 12;
         const offset = (page - 1) * limit;
-        const query = req.query.q || ''; // Add this line to get the query parameter
+        const query = req.query.q || '';
+        const type = req.query.type || 'all'; // all, article, activity
         
-        const posts = await Post.getAllPublished(limit, offset);
-        const totalPosts = await Post.countPublished();
-        const totalPages = Math.ceil(totalPosts / limit);
+        let posts = [];
+        let articles = [];
+        let totalPosts = 0;
+        let totalArticles = 0;
+        
+        // Fetch data based on type filter
+        if (type === 'all' || type === 'activity') {
+            if (query) {
+                posts = await Post.search(query, limit);
+                totalPosts = posts.length;
+            } else {
+                posts = await Post.getAllPublished(limit, offset);
+                totalPosts = await Post.countPublished();
+            }
+        }
+        
+        if (type === 'all' || type === 'article') {
+            if (query) {
+                articles = await Pedia.search(query, limit);
+                totalArticles = articles.length;
+            } else {
+                articles = await Pedia.getAllPublished(limit, offset);
+                totalArticles = await Pedia.countPublished();
+            }
+        }
+        
+        const totalItems = type === 'all' ? (totalPosts + totalArticles) : (type === 'article' ? totalArticles : totalPosts);
+        const totalPages = Math.ceil(totalItems / limit);
         
         res.render('posts/index', {
-            title: 'Aktivitas - ByzantiumEdu',
-            posts,
+            title: 'Artikel & Kegiatan - ByzantiumEdu',
+            posts: type === 'all' || type === 'activity' ? posts : [],
+            articles: type === 'all' || type === 'article' ? articles : [],
+            type,
             currentPage: page,
             totalPages,
             hasNextPage: page < totalPages,
             hasPrevPage: page > 1,
-            query: query, // Add this line to pass query to the view
+            query: query,
             user: req.session.user
         });
     } catch (error) {
         console.error('Posts page error:', error);
         res.render('posts/index', {
-            title: 'Aktivitas - ByzantiumEdu',
+            title: 'Artikel & Kegiatan - ByzantiumEdu',
             posts: [],
+            articles: [],
+            type: 'all',
             currentPage: 1,
             totalPages: 1,
             hasNextPage: false,
             hasPrevPage: false,
-            query: req.query.q || '', // Add this line to pass query to the view
+            query: req.query.q || '',
             user: req.session.user
         });
     }

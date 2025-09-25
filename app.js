@@ -77,11 +77,12 @@ app.set('views', path.join(__dirname, 'views'));
 // Session configuration
 app.use(session({
     secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
     cookie: {
         secure: process.env.NODE_ENV === 'production',
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        httpOnly: true
     }
 }));
 
@@ -90,12 +91,20 @@ app.use(flash());
 
 // Global variables for templates
 app.use((req, res, next) => {
+    // Debug session
+    console.log('Session middleware:', {
+        sessionID: req.sessionID,
+        hasSession: !!req.session,
+        user: req.session?.user,
+        isAuthenticated: !!req.session?.user
+    });
+
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
     res.locals.error = req.flash('error');
-    res.locals.user = req.session.user || null;
-    res.locals.isAuthenticated = req.session.user ? true : false;
-    res.locals.isAdmin = req.session.user && req.session.user.role === 'admin' ? true : false;
+    res.locals.user = req.session?.user || null;
+    res.locals.isAuthenticated = !!req.session?.user;
+    res.locals.isAdmin = req.session?.user?.role === 'admin';
     next();
 });
 

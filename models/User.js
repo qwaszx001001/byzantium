@@ -140,6 +140,20 @@ class User {
         }
     }
 
+    static async getRecent(limit = 5) {
+        try {
+            const [rows] = await db.query(
+                `SELECT id, username, email, full_name, role, created_at 
+                FROM users 
+                ORDER BY created_at DESC 
+                LIMIT ${parseInt(limit)}`
+            );
+            return rows;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     static async delete(id) {
         try {
             const [result] = await db.query(

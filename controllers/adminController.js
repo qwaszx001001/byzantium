@@ -17,7 +17,7 @@ const getAdminDashboard = async (req, res) => {
         const courseCount = await Course.count();
         const postCount = await Post.countPublished();
         const pediaCount = await Pedia.countPublished();
-        const ebookCount = await Ebook.countPublished();
+        const ebookCount = await Ebook.count(false);
         const enrollmentCount = await Enrollment.countAll();
         
         // Get recent activities
@@ -27,12 +27,14 @@ const getAdminDashboard = async (req, res) => {
         
         res.render('admin/dashboard', {
             title: 'Dashboard Admin - ByzantiumEdu',
-            userCount,
-            courseCount,
-            postCount,
-            pediaCount,
-            ebookCount,
-            enrollmentCount,
+            stats: {
+                totalUsers: userCount,
+                totalCourses: courseCount,
+                totalPosts: postCount,
+                totalPedia: pediaCount,
+                totalEbooks: ebookCount,
+                totalInstructors: enrollmentCount
+            },
             recentUsers,
             recentCourses,
             recentPosts,

@@ -1,264 +1,172 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="/css/style.css" rel="stylesheet">
-</head>
-<body>
-    <!-- Admin Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="/admin">
-                <i class="fas fa-cog me-2"></i>Admin Panel
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="adminNavbar">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/courses">Kursus</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/posts">Kegiatan</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/pedia">Artikel Pedia</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/admin/ebooks">Ebook</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/instructors">Instruktur</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/users">Users</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user me-1"></i><%= user.full_name %>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/">Lihat Website</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="/auth/logout">Logout</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+<%- include('../../layouts/admin', { title: title, user: user }) %>
+
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="fw-bold mb-2">Tambah Ebook Baru</h1>
+            <p class="text-muted mb-0">Upload ebook PDF untuk pengguna</p>
         </div>
-    </nav>
+        <a href="/admin/ebooks" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Kembali
+        </a>
+    </div>
 
-    <!-- Main Content -->
-    <main>
-        <div class="container py-4">
-            <!-- Header -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h1 class="fw-bold mb-2">Tambah Ebook Baru</h1>
-                    <p class="text-muted">Upload ebook PDF untuk pengguna</p>
+    <!-- Create Form -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-plus me-2"></i>Form Tambah Ebook
+                    </h5>
                 </div>
-                <a href="/admin/ebooks" class="btn btn-outline-secondary">
-                    <i class="fas fa-arrow-left me-2"></i>Kembali
-                </a>
-            </div>
-
-            <!-- Flash Messages -->
-            <% if (success_msg && success_msg.length > 0) { %>
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="fas fa-check-circle me-2"></i><%= success_msg %>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            <% } %>
-            
-            <% if (error_msg && error_msg.length > 0) { %>
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="fas fa-exclamation-circle me-2"></i><%= error_msg %>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            <% } %>
-
-            <!-- Create Form -->
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-white">
-                            <h5 class="mb-0">
-                                <i class="fas fa-plus me-2"></i>Form Tambah Ebook
-                            </h5>
+                <div class="card-body">
+                    <form action="/admin/ebooks/create" method="POST" enctype="multipart/form-data">
+                        <!-- Title -->
+                        <div class="mb-3">
+                            <label for="title" class="form-label fw-bold">Judul Ebook *</label>
+                            <input type="text" class="form-control" id="title" name="title" 
+                                   placeholder="Masukkan judul ebook" required>
+                            <div class="form-text">Judul yang menarik akan meningkatkan minat download</div>
                         </div>
-                        <div class="card-body">
-                            <form action="/admin/ebooks/create" method="POST" enctype="multipart/form-data">
-                                <!-- Title -->
-                                <div class="mb-3">
-                                    <label for="title" class="form-label fw-bold">Judul Ebook *</label>
-                                    <input type="text" class="form-control" id="title" name="title" 
-                                           placeholder="Masukkan judul ebook" required>
-                                    <div class="form-text">Judul yang menarik akan meningkatkan minat download</div>
-                                </div>
 
-                                <!-- Description -->
-                                <div class="mb-3">
-                                    <label for="description" class="form-label fw-bold">Deskripsi *</label>
-                                    <textarea class="form-control" id="description" name="description" rows="4" 
-                                              placeholder="Jelaskan isi ebook secara singkat" required></textarea>
-                                    <div class="form-text">Deskripsi yang jelas akan membantu pengguna memahami isi ebook</div>
-                                </div>
-
-                                <!-- PDF File -->
-                                <div class="mb-3">
-                                    <label for="pdf_file" class="form-label fw-bold">File PDF *</label>
-                                    <input type="file" class="form-control" id="pdf_file" name="pdf_file" 
-                                           accept=".pdf" required>
-                                    <div class="form-text">
-                                        <i class="fas fa-info-circle me-1"></i>
-                                        Maksimal 10MB. Hanya file PDF yang diperbolehkan.
-                                    </div>
-                                </div>
-
-                                <!-- Category -->
-                                <div class="mb-3">
-                                    <label for="category_id" class="form-label fw-bold">Kategori</label>
-                                    <select class="form-select" id="category_id" name="category_id">
-                                        <option value="">Pilih Kategori</option>
-                                        <option value="1">Teknologi</option>
-                                        <option value="2">Pendidikan</option>
-                                        <option value="3">Bisnis</option>
-                                        <option value="4">Kesehatan</option>
-                                        <option value="5">Seni & Budaya</option>
-                                    </select>
-                                    <div class="form-text">Kategori membantu pengguna menemukan ebook yang sesuai</div>
-                                </div>
-
-                                <!-- Author -->
-                                <div class="mb-3">
-                                    <label for="author_id" class="form-label fw-bold">Penulis *</label>
-                                    <select class="form-select" id="author_id" name="author_id" required>
-                                        <option value="">Pilih Penulis</option>
-                                        <% instructors.forEach(instructor => { %>
-                                            <option value="<%= instructor.id %>">
-                                                <%= instructor.full_name %> (<%= instructor.username %>)
-                                            </option>
-                                        <% }); %>
-                                    </select>
-                                    <div class="form-text">Pilih instruktur sebagai penulis ebook</div>
-                                </div>
-
-                                <!-- Status -->
-                                <div class="mb-3">
-                                    <label for="status" class="form-label fw-bold">Status</label>
-                                    <select class="form-select" id="status" name="status">
-                                        <option value="published">Published</option>
-                                        <option value="draft">Draft</option>
-                                    </select>
-                                    <div class="form-text">Draft tidak akan muncul di halaman publik</div>
-                                </div>
-
-                                <!-- Submit Buttons -->
-                                <div class="d-flex gap-2">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-save me-2"></i>Simpan Ebook
-                                    </button>
-                                    <button type="button" class="btn btn-outline-secondary" onclick="history.back()">
-                                        <i class="fas fa-times me-2"></i>Batal
-                                    </button>
-                                </div>
-                            </form>
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label fw-bold">Deskripsi *</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" 
+                                      placeholder="Jelaskan isi ebook secara singkat" required></textarea>
+                            <div class="form-text">Deskripsi yang jelas akan membantu pengguna memahami isi ebook</div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Sidebar -->
-                <div class="col-lg-4">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-info text-white">
-                            <h6 class="mb-0">
-                                <i class="fas fa-lightbulb me-2"></i>Tips Upload Ebook
-                            </h6>
+                        <!-- PDF File -->
+                        <div class="mb-3">
+                            <label for="pdf_file" class="form-label fw-bold">File PDF *</label>
+                            <input type="file" class="form-control" id="pdf_file" name="pdf_file" 
+                                   accept=".pdf" required>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Maksimal 10MB. Hanya file PDF yang diperbolehkan.
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <ul class="list-unstyled mb-0">
-                                <li class="mb-2">
-                                    <i class="fas fa-check text-success me-2"></i>
-                                    Pastikan file PDF berkualitas baik
-                                </li>
-                                <li class="mb-2">
-                                    <i class="fas fa-check text-success me-2"></i>
-                                    Judul yang menarik dan deskriptif
-                                </li>
-                                <li class="mb-2">
-                                    <i class="fas fa-check text-success me-2"></i>
-                                    Deskripsi yang jelas tentang isi ebook
-                                </li>
-                                <li class="mb-2">
-                                    <i class="fas fa-check text-success me-2"></i>
-                                    Pilih kategori yang sesuai
-                                </li>
-                                <li class="mb-2">
-                                    <i class="fas fa-check text-success me-2"></i>
-                                    Maksimal ukuran file 10MB
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
 
-                    <div class="card shadow-sm mt-3">
-                        <div class="card-header bg-warning text-dark">
-                            <h6 class="mb-0">
-                                <i class="fas fa-exclamation-triangle me-2"></i>Penting
-                            </h6>
+                        <!-- Category -->
+                        <div class="mb-3">
+                            <label for="category_id" class="form-label fw-bold">Kategori</label>
+                            <select class="form-select" id="category_id" name="category_id">
+                                <option value="">Pilih Kategori</option>
+                                <option value="1">Teknologi</option>
+                                <option value="2">Pendidikan</option>
+                                <option value="3">Bisnis</option>
+                                <option value="4">Kesehatan</option>
+                                <option value="5">Seni & Budaya</option>
+                            </select>
+                            <div class="form-text">Kategori membantu pengguna menemukan ebook yang sesuai</div>
                         </div>
-                        <div class="card-body">
-                            <p class="mb-2 small">
-                                <strong>Hak Cipta:</strong> Pastikan Anda memiliki hak untuk membagikan ebook ini secara gratis.
-                            </p>
-                            <p class="mb-0 small">
-                                <strong>Kualitas:</strong> Upload ebook yang bermanfaat dan berkualitas tinggi untuk pengguna.
-                            </p>
+
+                        <!-- Author -->
+                        <div class="mb-3">
+                            <label for="author_id" class="form-label fw-bold">Penulis *</label>
+                            <select class="form-select" id="author_id" name="author_id" required>
+                                <option value="">Pilih Penulis</option>
+                                <% instructors.forEach(instructor => { %>
+                                    <option value="<%= instructor.id %>">
+                                        <%= instructor.full_name %> (<%= instructor.username %>)
+                                    </option>
+                                <% }); %>
+                            </select>
+                            <div class="form-text">Pilih instruktur sebagai penulis ebook</div>
                         </div>
-                    </div>
+
+                        <!-- Status -->
+                        <div class="mb-3">
+                            <label for="status" class="form-label fw-bold">Status</label>
+                            <select class="form-select" id="status" name="status">
+                                <option value="published">Published</option>
+                                <option value="draft">Draft</option>
+                            </select>
+                            <div class="form-text">Draft tidak akan muncul di halaman publik</div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Simpan Ebook
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" onclick="history.back()">
+                                <i class="fas fa-times me-2"></i>Batal
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-    </main>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-3 mt-5">
-        <div class="container text-center">
-            <p class="mb-0">&copy; 2024 ByzantiumEdu Admin Panel. All rights reserved.</p>
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <div class="card mb-3">
+                <div class="card-header bg-info text-white">
+                    <h6 class="mb-0">
+                        <i class="fas fa-lightbulb me-2"></i>Tips Upload Ebook
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Pastikan file PDF berkualitas baik
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Judul yang menarik dan deskriptif
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Deskripsi yang jelas tentang isi ebook
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Pilih kategori yang sesuai
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Maksimal ukuran file 10MB
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h6 class="mb-0">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Penting
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="mb-2 small">
+                        <strong>Hak Cipta:</strong> Pastikan Anda memiliki hak untuk membagikan ebook ini secara gratis.
+                    </p>
+                    <p class="mb-0 small">
+                        <strong>Kualitas:</strong> Upload ebook yang bermanfaat dan berkualitas tinggi untuk pengguna.
+                    </p>
+                </div>
+            </div>
         </div>
-    </footer>
+    </div>
+</div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- File Upload Preview -->
-    <script>
-        document.getElementById('pdf_file').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const fileSize = (file.size / 1024 / 1024).toFixed(2);
-                if (fileSize > 10) {
-                    alert('File terlalu besar! Maksimal 10MB');
-                    this.value = '';
-                } else {
-                    console.log('File selected:', file.name, 'Size:', fileSize + 'MB');
-                }
+<!-- File Upload Preview -->
+<script>
+    document.getElementById('pdf_file').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const fileSize = (file.size / 1024 / 1024).toFixed(2);
+            if (fileSize > 10) {
+                alert('File terlalu besar! Maksimal 10MB');
+                this.value = '';
+            } else {
+                console.log('File selected:', file.name, 'Size:', fileSize + 'MB');
             }
-        });
-    </script>
-</body>
-</html> 
+        }
+    });
+</script> 

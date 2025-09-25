@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="h-100">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,13 +11,89 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="/css/style.css" rel="stylesheet">
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .admin-navbar {
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+            background: linear-gradient(to right, #1a237e, #283593);
+        }
+        .admin-navbar .navbar-brand {
+            font-size: 1.5rem;
+            padding: 0.5rem 0;
+        }
+        .admin-navbar .nav-link {
+            color: rgba(255,255,255,.8) !important;
+            padding: 1rem 1.2rem;
+            transition: all 0.3s ease;
+        }
+        .admin-navbar .nav-link:hover {
+            color: #ffffff !important;
+            background: rgba(255,255,255,.1);
+        }
+        .admin-navbar .nav-link.active {
+            color: #ffffff !important;
+            background: rgba(255,255,255,.2);
+        }
+        .admin-navbar .dropdown-menu {
+            border: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,.1);
+        }
+        .admin-navbar .dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+    
+        .card {
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,.05);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,.1);
+        }
+        .card-header {
+            background-color: #ffffff;
+            border-bottom: 1px solid rgba(0,0,0,.05);
+            padding: 1rem 1.25rem;
+        }
+        .footer {
+            background: #1a237e;
+            color: white;
+            padding: 1.5rem 0;
+            margin-top: auto;
+        }
+        .alert {
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,.05);
+        }
+        .btn {
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+        }
+        .table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .table thead th {
+            background: #f8f9fa;
+            border-bottom: none;
+            font-weight: 600;
+        }
+    </style>
 </head>
 <body>
     <!-- Admin Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark admin-navbar">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="/admin">
-                <i class="fas fa-cog me-2"></i>Admin Panel
+            <a class="navbar-brand d-flex align-items-center" href="/admin">
+                <img src="/assets/logo_byzantium.png" alt="ByzantiumEdu" height="40" class="me-2">
+                <span>Admin Panel</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar">
                 <span class="navbar-toggler-icon"></span>
@@ -25,36 +101,55 @@
             <div class="collapse navbar-collapse" id="adminNavbar">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin">Dashboard</a>
+                        <a class="nav-link <%= title.includes('Dashboard') ? 'active' : '' %>" href="/admin">
+                            <i class="fas fa-home me-2"></i>Dashboard
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/courses">Kursus</a>
+                        <a class="nav-link <%= title.includes('Kursus') ? 'active' : '' %>" href="/admin/courses">
+                            <i class="fas fa-book me-2"></i>Kursus
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/posts">Kegiatan</a>
+                        <a class="nav-link <%= title.includes('Kegiatan') ? 'active' : '' %>" href="/admin/posts">
+                            <i class="fas fa-newspaper me-2"></i>Kegiatan
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/pedia">Artikel Pedia</a>
+                        <a class="nav-link <%= title.includes('Artikel Pedia') ? 'active' : '' %>" href="/admin/pedia">
+                            <i class="fas fa-book-open me-2"></i>Artikel Pedia
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/ebooks">Ebook</a>
+                        <a class="nav-link <%= title.includes('Ebook') ? 'active' : '' %>" href="/admin/ebooks">
+                            <i class="fas fa-file-pdf me-2"></i>Ebook
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/instructors">Instruktur</a>
+                        <a class="nav-link <%= title.includes('Instruktur') ? 'active' : '' %>" href="/admin/instructors">
+                            <i class="fas fa-chalkboard-teacher me-2"></i>Instruktur
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/users">Users</a>
+                        <a class="nav-link <%= title.includes('Users') ? 'active' : '' %>" href="/admin/users">
+                            <i class="fas fa-users me-2"></i>Users
+                        </a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user me-1"></i><%= user.full_name %>
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                            <% if (user.avatar) { %>
+                                <img src="<%= user.avatar %>" alt="<%= user.full_name %>" class="rounded-circle me-2" width="32" height="32">
+                            <% } else { %>
+                                <i class="fas fa-user-circle me-2" style="font-size: 1.5rem;"></i>
+                            <% } %>
+                            <%= user.full_name %>
                         </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/">Lihat Website</a></li>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="/"><i class="fas fa-globe me-2"></i>Lihat Website</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="/auth/logout">Logout</a></li>
+                            <li><a class="dropdown-item text-danger" href="/auth/logout"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -63,33 +158,51 @@
     </nav>
 
     <!-- Flash Messages -->
-    <% if (success_msg && success_msg.length > 0) { %>
-        <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
-            <i class="fas fa-check-circle me-2"></i><%= success_msg %>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    <% } %>
-    
-    <% if (error_msg && error_msg.length > 0) { %>
-        <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
-            <i class="fas fa-exclamation-circle me-2"></i><%= error_msg %>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    <% } %>
+    <div class="container mt-3">
+        <% if (typeof success_msg !== 'undefined' && success_msg.length > 0) { %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i><%= success_msg %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <% } %>
+        
+        <% if (typeof error_msg !== 'undefined' && error_msg.length > 0) { %>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i><%= error_msg %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <% } %>
+    </div>
 
     <!-- Main Content -->
     <main>
         <%- typeof content !== 'undefined' ? content : '' %>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-3 mt-5">
-        <div class="container text-center">
-            <p class="mb-0">&copy; 2024 ByzantiumEdu Admin Panel. All rights reserved.</p>
-        </div>
-    </footer>
+   
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        // Auto-hide alerts after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(function(alert) {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                });
+            }, 5000);
+        });
+
+        // Add active class to current nav item
+        const currentPath = window.location.pathname;
+        document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+            if (currentPath.startsWith(link.getAttribute('href'))) {
+                link.classList.add('active');
+            }
+        });
+    </script>
 </body>
 </html> 

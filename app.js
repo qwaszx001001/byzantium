@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
 const flash = require('connect-flash');
 const path = require('path');
 const helmet = require('helmet');
@@ -11,6 +12,29 @@ const PORT = process.env.PORT || 3091;
 
 // Database connection
 const db = require('./config/database');
+
+// Session store options
+const options = {
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    clearExpired: true,
+    checkExpirationInterval: 900000,
+    expiration: 86400000, // 24 hours
+    createDatabaseTable: true,
+    schema: {
+        tableName: 'sessions',
+        columnNames: {
+            session_id: 'session_id',
+            expires: 'expires',
+            data: 'data'
+        }
+    }
+};
+
+const sessionStore = new MySQLStore(options);
 
 // Middleware
 app.use(helmet({
@@ -65,6 +89,7 @@ app.use(helmet({
     crossOriginEmbedderPolicy: false,
     crossOriginResourcePolicy: false
 }));
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -76,13 +101,15 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Session configuration
 app.use(session({
+    key: 'byzantium_session',
     secret: process.env.SESSION_SECRET,
-    resave: true,
-    saveUninitialized: true,
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: false,
     cookie: {
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: 24 * 60 * 60 * 1000, // 24 hours
-        httpOnly: true
+        secure: false, // Set to true only if using HTTPS
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
     }
 }));
 

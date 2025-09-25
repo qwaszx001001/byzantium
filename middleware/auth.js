@@ -1,4 +1,9 @@
 const isAuthenticated = (req, res, next) => {
+    console.log('Checking authentication:', {
+        hasSession: !!req.session,
+        hasUser: !!req.session?.user,
+        userRole: req.session?.user?.role
+    });
     if (req.session.user) {
         return next();
     }
@@ -7,6 +12,10 @@ const isAuthenticated = (req, res, next) => {
 };
 
 const isNotAuthenticated = (req, res, next) => {
+    console.log('Checking if not authenticated:', {
+        hasSession: !!req.session,
+        hasUser: !!req.session?.user
+    });
     if (!req.session.user) {
         return next();
     }
@@ -14,6 +23,11 @@ const isNotAuthenticated = (req, res, next) => {
 };
 
 const isAdmin = (req, res, next) => {
+    console.log('Checking admin access:', {
+        hasSession: !!req.session,
+        hasUser: !!req.session?.user,
+        userRole: req.session?.user?.role
+    });
     if (req.session.user && req.session.user.role === 'admin') {
         return next();
     }
@@ -22,6 +36,11 @@ const isAdmin = (req, res, next) => {
 };
 
 const isAdminOrInstructor = (req, res, next) => {
+    console.log('Checking admin/instructor access:', {
+        hasSession: !!req.session,
+        hasUser: !!req.session?.user,
+        userRole: req.session?.user?.role
+    });
     if (req.session.user && (req.session.user.role === 'admin' || req.session.user.role === 'instructor')) {
         return next();
     }

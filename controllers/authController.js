@@ -15,24 +15,30 @@ const showCombinedAuthForm = (req, res) => {
 // Handle login
 const login = async (req, res) => {
     try {
+        console.log('Login attempt:', { email: req.body.email });
         const { email, password } = req.body;
         
         // Validate input
         if (!email || !password) {
+            console.log('Login failed: Missing email or password');
             req.flash('error_msg', 'Email dan password harus diisi');
             return res.redirect('/auth');
         }
         
         // Check user
         const user = await User.findByEmail(email);
+        console.log('User found:', user ? 'Yes' : 'No');
         if (!user) {
+            console.log('Login failed: User not found');
             req.flash('error_msg', 'Email atau password salah');
             return res.redirect('/auth');
         }
         
         // Check password
         const isMatch = await User.comparePassword(password, user.password);
+        console.log('Password match:', isMatch ? 'Yes' : 'No');
         if (!isMatch) {
+            console.log('Login failed: Password incorrect');
             req.flash('error_msg', 'Email atau password salah');
             return res.redirect('/auth');
         }
@@ -45,8 +51,10 @@ const login = async (req, res) => {
             role: user.role,
             avatar: user.avatar
         };
+        console.log('Session set:', req.session.user);
         
         req.flash('success_msg', 'Berhasil masuk');
+        console.log('Login successful, redirecting to home');
         res.redirect('/');
     } catch (error) {
         console.error('Login error:', error);

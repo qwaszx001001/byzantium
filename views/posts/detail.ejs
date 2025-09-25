@@ -1,240 +1,462 @@
 <%- include('../layouts/main', { title: title, user: user }) %>
 
 <style>
-.byz-post-wrapper {
-    max-width: 1140px;
-    margin: 0 auto;
-    padding: 0 15px;
-}
-
-.byz-post-container {
-    background: white;
-    position: relative;
-    overflow: hidden;
-    border-radius: 12px;
-    padding: 2rem 0;
-}
-
-.byz-featured-image {
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-}
-
-.byz-featured-image img {
-    height: 400px;
-    object-fit: cover;
-    width: 100%;
-}
-
-.byz-card {
-    background: linear-gradient(90deg, #2c5530 0%, #1e3a21 100%);
-    border: none;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.byz-card .card-body {
-    color: rgba(255,255,255,0.9);
-}
-
-.byz-card-header {
-    background: rgba(255,255,255,0.1);
-    border: none;
-    padding: 1rem 1.25rem;
-    color: white;
-}
-
-.byz-gallery-item {
-    display: block;
-    border-radius: 6px;
-    overflow: hidden;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-}
-
-.byz-gallery-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important;
-}
-
-.byz-gallery-item:hover img {
-    transform: scale(1.05);
-}
-
-.byz-gallery-item img {
-    height: 120px;
-    object-fit: cover;
-    width: 100%;
-    transition: all 0.3s ease;
-}
-
-.content-area img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    margin: 1rem 0;
-}
-
-.content-area a {
-    color: rgba(255,255,255,0.9);
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.content-area a:hover {
-    color: white;
-    text-decoration: underline;
-}
-
-.byz-meta-icon {
-    color: rgba(255,255,255,0.9);
-    margin-right: 0.5rem;
-}
-
-.byz-meta-text {
-    color: rgba(255,255,255,0.8);
-}
-
-.byz-meta-text strong {
-    color: white;
-}
-
-@media (max-width: 768px) {
-    .byz-post-wrapper {
-        padding: 0 10px;
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
-    
-    .byz-featured-image img {
-        height: 300px;
+
+    body {
+        line-height: 1.6;
+        color: #292929;
+        font-family: 'Georgia', serif;
+        background-color: #f7f2e5;
     }
-}
+
+    .container {
+        max-width: 728px;
+        margin: 70px auto 0;
+        padding: 0 20px;
+    }
+
+    .article-header {
+        padding: 40px 0;
+    }
+
+    .article-title {
+        font-size: 42px;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 30px;
+        color: #292929;
+    }
+
+    .author-info {
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .author-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #2c5530, #1e3a21);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        margin-right: 16px;
+        font-size: 18px;
+    }
+
+    .author-details {
+        flex: 1;
+    }
+
+    .author-name {
+        font-weight: 500;
+        color: #292929;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .follow-btn {
+        background: #2c5530;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .follow-btn:hover {
+        background: #1e3a21;
+    }
+
+    .article-meta {
+        color: #6b6b6b;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .actions-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 0;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+        margin-bottom: 40px;
+    }
+
+    .engagement {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+    }
+
+    .engagement-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #6b6b6b;
+        font-size: 14px;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 16px;
+    }
+
+    .action-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #6b6b6b;
+        padding: 8px;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+    }
+
+    .action-btn:hover {
+        background: rgba(0,0,0,0.05);
+    }
+
+    .featured-image {
+        width: 100%;
+        height: 400px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        object-fit: cover;
+    }
+
+    .image-caption {
+        text-align: center;
+        font-size: 14px;
+        color: #6b6b6b;
+        margin-bottom: 40px;
+    }
+
+    .article-content {
+        margin-bottom: 60px;
+        font-size: 18px;
+        line-height: 1.8;
+    }
+
+    .article-content p {
+        margin-bottom: 20px;
+    }
+
+    .article-content img {
+        max-width: 100%;
+        border-radius: 8px;
+        margin: 20px 0;
+    }
+
+    .tags {
+        display: flex;
+        gap: 12px;
+        margin: 40px 0;
+        flex-wrap: wrap;
+    }
+
+    .tag {
+        background: rgba(44, 85, 48, 0.1);
+        color: #2c5530;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .tag:hover {
+        background: rgba(44, 85, 48, 0.2);
+    }
+
+    .author-section {
+        border-top: 1px solid rgba(0,0,0,0.1);
+        padding-top: 40px;
+        margin-bottom: 40px;
+    }
+
+    .author-full {
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+        background: white;
+        padding: 24px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .author-avatar-large {
+        width: 88px;
+        height: 88px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #2c5530, #1e3a21);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 32px;
+        flex-shrink: 0;
+    }
+
+    .author-content {
+        flex: 1;
+    }
+
+    .author-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 12px;
+    }
+
+    .author-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #292929;
+        margin-bottom: 4px;
+    }
+
+    .author-stats {
+        font-size: 14px;
+        color: #6b6b6b;
+    }
+
+    .author-bio {
+        font-size: 16px;
+        line-height: 1.5;
+        color: #6b6b6b;
+    }
+
+    .related-posts {
+        margin-top: 60px;
+        padding-top: 40px;
+        border-top: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .related-title {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 24px;
+        color: #292929;
+    }
+
+    .related-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 24px;
+    }
+
+    .related-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+    }
+
+    .related-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .related-image {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+    }
+
+    .related-content {
+        padding: 16px;
+    }
+
+    .related-card-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #292929;
+        margin-bottom: 8px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .related-meta {
+        font-size: 14px;
+        color: #6b6b6b;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 0 16px;
+            margin-top: 60px;
+        }
+        
+        .article-title {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+        
+        .featured-image {
+            height: 250px;
+        }
+
+        .article-content {
+            font-size: 16px;
+        }
+
+        .author-full {
+            padding: 16px;
+        }
+
+        .author-avatar-large {
+            width: 64px;
+            height: 64px;
+            font-size: 24px;
+        }
+
+        .related-grid {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
 
-        <div class="byz-post-wrapper">
-            <div class="byz-post-container">
-                <!-- Decorative Elements -->
-                <div class="byz-decorative-circle" style="position: absolute; width: 300px; height: 300px; border-radius: 50%; background: rgba(255,255,255,0.03); top: -100px; right: -100px;"></div>
-                <div class="byz-decorative-circle" style="position: absolute; width: 200px; height: 200px; border-radius: 50%; background: rgba(255,255,255,0.02); bottom: -50px; left: -50px;"></div>
-
-                <div class="container-fluid px-3">
-                    <div class="row">
-                        <!-- Activity Content -->
-                        <div class="col-lg-8">
-                            <!-- Featured Image -->
-                            <% if (post.featured_image) { %>
-                                <div class="mb-4 position-relative byz-featured-image">
-                                    <img src="<%= post.featured_image %>" class="img-fluid" alt="<%= post.title %>">
-                                    <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); padding: 40px 20px 20px;">
-                                        <h1 class="text-white mb-0" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.3);"><%= post.title %></h1>
-                                    </div>
-                                </div>
-                            <% } %>
-
-                            <!-- Activity Info -->
-                            <div class="card byz-card mb-4">
-                                <div class="card-body p-4">
-                                    <% if (!post.featured_image) { %>
-                                        <h1 class="card-title fw-bold mb-4 text-white"><%= post.title %></h1>
-                                    <% } %>
-                                    
-                                    <div class="row mb-4">
-                                        <div class="col-md-6">
-                                            <div class="d-flex align-items-center mb-3">
-                                                <i class="fas fa-calendar byz-meta-icon"></i>
-                                                <span class="byz-meta-text">Tanggal: <strong><%= post.activity_date ? new Date(post.activity_date).toLocaleDateString('id-ID') : 'Tidak ditentukan' %></strong></span>
-                                            </div>
-                                            <div class="d-flex align-items-center mb-3">
-                                                <i class="fas fa-map-marker-alt byz-meta-icon"></i>
-                                                <span class="byz-meta-text">Lokasi: <strong><%= post.location || 'Tidak ditentukan' %></strong></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="d-flex align-items-center mb-3">
-                                                <i class="fas fa-tag byz-meta-icon"></i>
-                                                <span class="byz-meta-text">Kategori: <strong><%= post.category_name || 'Umum' %></strong></span>
-                                            </div>
-                                            <div class="d-flex align-items-center mb-3">
-                                                <i class="fas fa-user byz-meta-icon"></i>
-                                                <span class="byz-meta-text">Dibuat oleh: <strong><%= post.author_name || 'Admin' %></strong></span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <% if (post.excerpt) { %>
-                                        <div class="alert mb-4" style="background: rgba(255,255,255,0.1); border: none; border-left: 4px solid rgba(255,255,255,0.3); border-radius: 4px;">
-                                            <i class="fas fa-info-circle me-2 text-white"></i>
-                                            <strong class="text-white">Deskripsi Singkat:</strong><br>
-                                            <span style="color: rgba(255,255,255,0.9);"><%= post.excerpt %></span>
-                                        </div>
-                                    <% } %>
-
-                                    <div class="content-area mt-4">
-                                        <h5 class="fw-bold mb-3 text-white">Detail Kegiatan</h5>
-                                        <div><%- post.content %></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Video Section -->
-                            <% if (post.video_url) { %>
-                                <div class="card byz-card mb-4">
-                                    <div class="byz-card-header">
-                                        <h5 class="mb-0"><i class="fas fa-video me-2"></i>Video Dokumentasi</h5>
-                                    </div>
-                                    <div class="card-body p-4">
-                                        <div class="ratio ratio-16x9" style="border-radius: 8px; overflow: hidden;">
-                                            <iframe src="<%= getYouTubeEmbedUrl(post.video_url) %>" 
-                                                    title="<%= post.title %>" 
-                                                    frameborder="0" 
-                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                                    allowfullscreen></iframe>
-                                        </div>
-                                    </div>
-                                </div>
-                            <% } %>
-                        </div>
-
-                        <!-- Sidebar -->
-                        <div class="col-lg-4">
-                            <!-- Activity Gallery -->
-                            <% if (typeof postImages !== 'undefined' && postImages.length > 0) { %>
-                                <div class="card byz-card mb-4">
-                                    <div class="byz-card-header">
-                                        <h5 class="mb-0"><i class="fas fa-images me-2"></i>Gallery Foto</h5>
-                                    </div>
-                                    <div class="card-body p-3">
-                                        <div class="row g-2">
-                                            <% postImages.forEach((image, index) => { %>
-                                                <div class="col-6">
-                                                    <a href="<%= image.image_path %>" data-lightbox="gallery" data-title="<%= post.title %>" class="byz-gallery-item">
-                                                        <img src="<%= image.image_path %>" class="img-fluid" alt="Foto kegiatan">
-                                                    </a>
-                                                </div>
-                                            <% }); %>
-                                        </div>
-                                    </div>
-                                </div>
-                            <% } %>
-
-                            <!-- Related Activities -->
-                            <div class="card byz-card">
-                                <div class="byz-card-header">
-                                    <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Kegiatan Terkait</h5>
-                                </div>
-                                <div class="card-body p-4">
-                                    <p class="mb-4" style="color: rgba(255,255,255,0.8);">Kegiatan lain yang mungkin menarik untuk Anda</p>
-                                    <div class="text-center py-3">
-                                        <i class="fas fa-spinner fa-spin text-white"></i>
-                                        <p class="mt-2" style="color: rgba(255,255,255,0.8);">Memuat kegiatan terkait...</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+<div class="container">
+    <article>
+        <header class="article-header">
+            <h1 class="article-title"><%= post.title %></h1>
+            
+            <div class="author-info">
+                <div class="author-avatar">
+                    <%= post.author_name ? post.author_name.charAt(0).toUpperCase() : 'A' %>
+                </div>
+                <div class="author-details">
+                    <div class="author-name">
+                        <%= post.author_name || 'Admin' %>
+                        <button class="follow-btn">Follow</button>
+                    </div>
+                    <div class="article-meta">
+                        <span><%= Math.ceil(post.content.length / 1500) %> min read</span>
+                        <span>•</span>
+                        <span><%= new Date(post.created_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) %></span>
                     </div>
                 </div>
             </div>
-        </div>
-        <%- include('../layouts/footer') %>
+
+            <div class="actions-bar">
+                <div class="engagement">
+                    <div class="engagement-item">
+                        <span>👍</span>
+                        <span><%= post.like_count || 0 %></span>
+                    </div>
+                    <div class="engagement-item">
+                        <span>💬</span>
+                        <span><%= post.comment_count || 0 %></span>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="action-btn" title="Bookmark">📑</button>
+                    <button class="action-btn" title="Share">📤</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="article-content">
+            <% if (post.featured_image) { %>
+                <img src="<%= post.featured_image %>" alt="<%= post.title %>" class="featured-image">
+            <% } %>
+
+            <div class="article-content">
+                <%- post.content %>
+            </div>
+
+            <div class="tags">
+                <a href="#" class="tag"><%= post.category_name || 'Umum' %></a>
+                <% if (post.location) { %>
+                    <a href="#" class="tag"><i class="fas fa-map-marker-alt"></i> <%= post.location %></a>
+                <% } %>
+                <% if (post.activity_date) { %>
+                    <a href="#" class="tag"><i class="fas fa-calendar"></i> <%= new Date(post.activity_date).toLocaleDateString('id-ID') %></a>
+                <% } %>
+            </div>
+
+            <div class="actions-bar">
+                <div class="engagement">
+                    <div class="engagement-item">
+                        <span>👍</span>
+                        <span><%= post.like_count || 0 %></span>
+                    </div>
+                    <div class="engagement-item">
+                        <span>💬</span>
+                        <span><%= post.comment_count || 0 %></span>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="action-btn" title="Bookmark">📑</button>
+                    <button class="action-btn" title="Share">📤</button>
+                </div>
+            </div>
+        </main>
+
+        <section class="author-section">
+            <div class="author-full">
+                <div class="author-avatar-large">
+                    <%= post.author_name ? post.author_name.charAt(0).toUpperCase() : 'A' %>
+                </div>
+                <div class="author-content">
+                    <div class="author-header">
+                        <div>
+                            <div class="author-title">Written by <%= post.author_name || 'Admin' %></div>
+                            <div class="author-stats">Kontributor ByzantiumEdu</div>
+                        </div>
+                        <button class="follow-btn">Follow</button>
+                    </div>
+                    <div class="author-bio">
+                        Penulis konten di ByzantiumEdu yang berfokus pada berbagi ilmu dan pengalaman dalam bidang pendidikan.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <% if (relatedPosts && relatedPosts.length > 0) { %>
+            <section class="related-posts">
+                <h3 class="related-title">Artikel Terkait</h3>
+                <div class="related-grid">
+                    <% relatedPosts.forEach(related => { %>
+                        <a href="/posts/<%= related.slug %>" class="related-card" style="text-decoration: none;">
+                            <% if (related.featured_image) { %>
+                                <img src="<%= related.featured_image %>" alt="<%= related.title %>" class="related-image">
+                            <% } else { %>
+                                <div class="related-image" style="background: linear-gradient(135deg, #2c5530, #1e3a21); display: flex; align-items: center; justify-content: center; color: white;">
+                                    <i class="fas fa-newspaper" style="font-size: 2rem;"></i>
+                                </div>
+                            <% } %>
+                            <div class="related-content">
+                                <h4 class="related-card-title"><%= related.title %></h4>
+                                <div class="related-meta">
+                                    <span><%= new Date(related.created_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) %></span>
+                                </div>
+                            </div>
+                        </a>
+                    <% }) %>
+                </div>
+            </section>
+        <% } %>
+    </article>
+</div>
+
+<%- include('../layouts/footer') %>
     

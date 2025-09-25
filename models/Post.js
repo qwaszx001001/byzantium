@@ -170,19 +170,24 @@ class Post {
 
     static async getByCategory(categoryName, limit = 10) {
         try {
-            const [rows] = await db.execute(`
+            // Convert limit to number and ensure it's positive
+            const limitNum = Math.max(1, parseInt(limit) || 10);
+            
+            const [rows] = await db.query(`
                 SELECT p.*, cat.name as category_name, u.full_name as author_name 
                 FROM posts p 
                 LEFT JOIN categories cat ON p.category_id = cat.id 
                 LEFT JOIN users u ON p.author_id = u.id 
                 WHERE p.status = 'published' 
-                AND cat.name = ?
+                AND (cat.name = ? OR cat.name IS NULL)
                 ORDER BY p.created_at DESC 
-                LIMIT ?
-            `, [categoryName, limit]);
+                LIMIT ${limitNum}
+            `, [categoryName]);
+            
             return rows;
         } catch (error) {
-            throw error;
+            console.error('getByCategory error:', error);
+            return [];
         }
     }
 }

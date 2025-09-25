@@ -81,8 +81,26 @@ const getPostBySlug = async (req, res) => {
             });
         }
         
-        // Get related posts (using getByCategory as a substitute)
-        const relatedPosts = await Post.getByCategory(post.category_name || 'Umum', 3);
+        // Get related posts
+        let relatedPosts = [];
+        try {
+            if (post.category_name) {
+                relatedPosts = await Post.getByCategory(post.category_name, 3);
+                // Remove current post from related posts
+                relatedPosts = relatedPosts.filter(p => p.id !== post.id);
+            }
+        } catch (error) {
+            console.error('Related posts error:', error);
+            // Continue without related posts
+        }
+
+        // Increment view count
+        try {
+            await Post.incrementViewCount(post.id);
+        } catch (error) {
+            console.error('View count increment error:', error);
+            // Continue even if view count update fails
+        }
         
         res.render('posts/detail', {
             title: `${post.title} - ByzantiumEdu`,
@@ -92,8 +110,8 @@ const getPostBySlug = async (req, res) => {
         });
     } catch (error) {
         console.error('Post detail error:', error);
-        res.status(500).render('error/500', {
-            title: 'Terjadi Kesalahan',
+        res.status(404).render('error/404', {
+            title: 'Artikel Tidak Ditemukan',
             user: req.session.user
         });
     }
